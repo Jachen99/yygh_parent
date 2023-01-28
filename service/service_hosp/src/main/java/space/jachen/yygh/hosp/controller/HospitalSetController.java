@@ -74,8 +74,8 @@ public class HospitalSetController {
 
 
     @ApiOperation("根据id查询医院设置")
-    @GetMapping("/getById")
-    public JsonData<HospitalSet> getById(Long id){
+    @GetMapping("/getHospSet/{id}")
+    public JsonData<HospitalSet> getById(@PathVariable Long id){
         HospitalSet hospitalSet = hospitalSetService.getById(id);
 
         return JsonData.ok(hospitalSet);
@@ -88,7 +88,7 @@ public class HospitalSetController {
      * @return
      */
     @ApiOperation(value = "医院设置新增")
-    @PostMapping("/save")
+    @PostMapping("/saveHospSet")
     public JsonData<HospitalSet> save(@RequestBody HospitalSet hospitalSet){
 
         boolean save = hospitalSetService.save(hospitalSet);
@@ -108,7 +108,7 @@ public class HospitalSetController {
      * @return
      */
     @ApiOperation(value = "医院设置修改")
-    @PutMapping("/update")
+    @PutMapping("/updateHospSet")
     public JsonData<HospitalSet> updateById(@RequestBody HospitalSet hospitalSet){
 
         boolean updateById = hospitalSetService.updateById(hospitalSet);
@@ -160,7 +160,6 @@ public class HospitalSetController {
             hospitalSetService.page(pageParam, queryWrapper);
         }
 
-
         return JsonData.build(pageParam,200,"succeed");
     }
 
@@ -188,7 +187,7 @@ public class HospitalSetController {
      * @return 返回boolean
      */
     @ApiOperation(value = "医院设置删除")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/removeById/{id}")
     public JsonData<HospitalSet> removeById(
             @ApiParam(name = "id", value = "ID", required = true)
             @PathVariable Long id){

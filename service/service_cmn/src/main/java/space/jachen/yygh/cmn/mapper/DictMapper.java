@@ -1,7 +1,8 @@
 package space.jachen.yygh.cmn.mapper;
 
-import space.jachen.yygh.cmn.entity.Dict;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import space.jachen.yygh.model.cmn.Dict;
 
 /**
  * <p>

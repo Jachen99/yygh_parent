@@ -1,7 +1,9 @@
 package space.jachen.yygh.cmn.service;
 
-import space.jachen.yygh.cmn.entity.Dict;
 import com.baomidou.mybatisplus.extension.service.IService;
+import space.jachen.yygh.model.cmn.Dict;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface DictService extends IService<Dict> {
 
+
+    //根据数据id查询子数据列表
+    List<Dict> findChlidData(Long id);
 }

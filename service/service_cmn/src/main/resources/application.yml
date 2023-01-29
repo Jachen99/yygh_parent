@@ -1,0 +1,23 @@
+# 服务端口
+server:
+  port: 8202
+#服务名
+spring:
+  application:
+    name: service-cmn
+  #环境设置：dev、test、prod
+  profiles:
+    active: dev
+  #MySQL数据库连接
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/yygh_cmn?characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #返回JSON的全局时间格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -32,8 +32,8 @@ public class LoginController {
         //{"code":20000,"data":{"roles":["admin"],"introduction":"I am a super administrator","avatar":"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif","name":"Super Admin"}}
 
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("name","欢迎季老板！");
-        hashMap.put("avatar","https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        hashMap.put("name","季老板");
+        hashMap.put("avatar","https://blog.jiguanchen.space/assets/img/head.jpg");
         return JsonData.ok(hashMap);
     }
 

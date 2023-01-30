@@ -46,7 +46,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
         } catch (Exception e) {
 
-            throw new YyghException(444,e.getMessage());
+            throw new YyghException(444,e.getMessage(),e);
 
         }
     }

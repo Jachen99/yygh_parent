@@ -8,6 +8,7 @@ import space.jachen.yygh.cmn.service.DictService;
 import space.jachen.yygh.model.cmn.Dict;
 import space.jachen.yygh.vo.cmn.DictEeVo;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class DictListener extends AnalysisEventListener<DictEeVo> {
 
     //通过构造传service
+    @Resource
     private DictService dictService;
 
     public DictListener(){}

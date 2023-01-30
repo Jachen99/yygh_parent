@@ -16,4 +16,10 @@ public class YyghException extends RuntimeException {
     @ApiModelProperty(value = "状态码")
     private Integer code;
     private String msg;
+
+    public YyghException(Integer code,String msg,Exception e){
+        super(e);
+        this.code = code;
+        this.msg = msg;
+    }
 }

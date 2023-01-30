@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.multipart.MultipartFile;
 import space.jachen.yygh.cmn.listener.DictListener;
 import space.jachen.yygh.cmn.mapper.DictMapper;
@@ -35,6 +37,8 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     @Autowired
     DictService dictService;
 
+    //添加注解，添加数据字典数据时候，清空缓存
+    @CacheEvict(value = "dict",allEntries = true)
     @Override
     public void importData(MultipartFile file) {
 
@@ -50,6 +54,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
         }
     }
+
 
     @Override
     public void exportData(HttpServletResponse response) {
@@ -87,6 +92,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @param id 传入id值
      * @return  返回字典集合
      */
+    @Cacheable(value = "dict")
     @Override
     public List<Dict> findChlidData(Long id) {
 

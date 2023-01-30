@@ -1,12 +1,20 @@
 package space.jachen.yygh.cmn.service.impl;
 
+import com.alibaba.excel.EasyExcel;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.beans.BeanUtils;
 import space.jachen.yygh.cmn.mapper.DictMapper;
 import space.jachen.yygh.cmn.service.DictService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import space.jachen.yygh.common.handler.YyghException;
 import space.jachen.yygh.model.cmn.Dict;
+import space.jachen.yygh.vo.cmn.DictEeVo;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +28,38 @@ import java.util.List;
 @Service
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
 
+
+    @Override
+    public void exportData(HttpServletResponse response) {
+
+        try {
+            // 1、设置响应数据类型 告诉浏览器传输的内容类型是Microsoft Excel文件。
+            response.setContentType("application/vnd.ms-excel");
+
+            String name = URLEncoder.encode("数据字典", "UTF-8");
+
+            // 2、让浏览器将 响应内容作为一个附件 下载下来
+            response.setHeader("Content-disposition", "attachment;filename="+ name + ".xlsx");
+
+            // 3、获取数据集合List<Dict>赋给List<DictEeVo>
+            List<Dict> dictList = baseMapper.selectList(null);
+            List<DictEeVo> dictEeVoList = new ArrayList<>();
+            for (Dict dict : dictList) {
+                DictEeVo eeVo = new DictEeVo();
+                BeanUtils.copyProperties(dict,eeVo);
+                dictEeVoList.add(eeVo);
+            }
+
+            // 4、使用阿里的EasyExcel框架写入数据
+            EasyExcel.write(response.getOutputStream(), DictEeVo.class)
+                    .sheet("数据字典").doWrite(dictEeVoList);
+
+        } catch (Exception e) {
+            throw new YyghException(444,e.getMessage());
+        }
+
+    }
+
     /**
      * 根据数据id查询子数据列表
      * @param id 传入id值
@@ -30,7 +70,12 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
         //1、传入parent_id作为查询条件
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.eq("parent_id",id);
+
+        if (id==120000L||id==230000L|id==610000L){
+            wrapper.eq("parent_id",id+100L);
+        }else {
+            wrapper.eq("parent_id",id);
+        }
 
         // 2、调用baomidou的baseWrapper查询方法
         List<Dict> dictList = baseMapper.selectList(wrapper);
@@ -58,10 +103,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      */
     public Boolean isChildren(Long dictId) {
 
-        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Dict> wrapper = new LambdaQueryWrapper<>();
 
-        // 节点的id 与 子节点的父id进行比较
-        wrapper.eq("parent_id",dictId);
+        if (dictId==120000L||dictId==230000L||dictId==610000L){
+            wrapper.eq(Dict::getParentId,dictId+100L);
+        }else {
+            // 节点的id 与 子节点的父id进行比较
+            wrapper.eq(Dict::getParentId,dictId);
+        }
 
         // 查询总记录数 通过记录数判断是否有子节点
         return baseMapper.selectCount(wrapper) > 0;

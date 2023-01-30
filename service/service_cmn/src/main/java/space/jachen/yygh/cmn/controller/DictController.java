@@ -10,6 +10,7 @@ import space.jachen.yygh.cmn.service.DictService;
 import space.jachen.yygh.common.result.JsonData;
 import space.jachen.yygh.model.cmn.Dict;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,6 +30,13 @@ public class DictController {
 
     @Autowired
     private DictService dictService;
+
+
+    @ApiOperation(value="导出")
+    @GetMapping(value = "/exportData")
+    public void exportData(HttpServletResponse response) {
+        dictService.exportData(response);
+    }
 
 
     //根据数据id查询子数据列表

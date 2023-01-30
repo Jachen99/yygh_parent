@@ -3,9 +3,11 @@ package space.jachen.yygh.cmn.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
 import space.jachen.yygh.cmn.service.DictService;
 import space.jachen.yygh.common.result.JsonData;
 import space.jachen.yygh.model.cmn.Dict;
@@ -32,7 +34,27 @@ public class DictController {
     private DictService dictService;
 
 
-    @ApiOperation(value="导出")
+    /**
+     * MultipartFile是Spring中用于处理文件上传请求的类。
+     * 它是org.springframework.web.multipart.MultipartFile接口的一个实现，
+     * 并且通常用于处理使用multipart/form-data编码的HTTP POST请求。
+     * 该类提供了一系列方法，用于访问上传文件的元数据，例如文件名、文件类型等，以及操作上传文件的内容，
+     * 例如读取文件的内容或将其写入磁盘。
+     * 在处理文件上传请求时，可以在控制器方法中接收MultipartFile对象，
+     * 然后使用该对象的方法进行文件的读取和处理。
+     *
+     * @param file 上传的文件
+     * @return 返回状态信息
+     */
+    @ApiOperation(value = "导入数据字典")
+    @PostMapping("/importData")
+    public JsonData<String> importData(MultipartFile file) {
+        dictService.importData(file);
+        return JsonData.ok("上传成功");
+    }
+
+
+    @ApiOperation(value="导出数据字典")
     @GetMapping(value = "/exportData")
     public void exportData(HttpServletResponse response) {
         dictService.exportData(response);

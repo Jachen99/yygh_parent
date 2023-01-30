@@ -4,6 +4,8 @@ import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.web.multipart.MultipartFile;
+import space.jachen.yygh.cmn.listener.DictListener;
 import space.jachen.yygh.cmn.mapper.DictMapper;
 import space.jachen.yygh.cmn.service.DictService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,6 +15,7 @@ import space.jachen.yygh.model.cmn.Dict;
 import space.jachen.yygh.vo.cmn.DictEeVo;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,22 @@ import java.util.List;
 @Service
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
 
+
+    @Override
+    public void importData(MultipartFile file) {
+
+        try {
+
+            EasyExcel.read(file.getInputStream(),
+                    DictEeVo.class,
+                    new DictListener(this)).sheet().doRead();
+
+        } catch (Exception e) {
+
+            throw new YyghException(444,e.getMessage());
+
+        }
+    }
 
     @Override
     public void exportData(HttpServletResponse response) {

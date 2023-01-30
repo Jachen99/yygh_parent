@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import space.jachen.yygh.cmn.listener.DictListener;
 import space.jachen.yygh.cmn.mapper.DictMapper;
@@ -31,6 +32,8 @@ import java.util.List;
 @Service
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
 
+    @Autowired
+    DictService dictService;
 
     @Override
     public void importData(MultipartFile file) {
@@ -39,7 +42,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
             EasyExcel.read(file.getInputStream(),
                     DictEeVo.class,
-                    new DictListener(this)).sheet().doRead();
+                    new DictListener(dictService)).sheet().doRead();
 
         } catch (Exception e) {
 

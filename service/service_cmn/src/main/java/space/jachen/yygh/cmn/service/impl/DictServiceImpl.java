@@ -38,7 +38,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     DictService dictService;
 
     //添加注解，添加数据字典数据时候，清空缓存
-    @CacheEvict(value = "dict",allEntries = true)
+    //@CacheEvict(value = "dict",allEntries = true)
     @Override
     public void importData(MultipartFile file) {
 
@@ -92,7 +92,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * @param id 传入id值
      * @return  返回字典集合
      */
-    @Cacheable(value = "dict")
+    //@Cacheable(value = "dict")
     @Override
     public List<Dict> findChlidData(Long id) {
 

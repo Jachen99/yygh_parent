@@ -12,5 +12,4 @@ import space.jachen.yygh.model.hosp.HospitalSet;
  * @since 2023-01-13
  */
 public interface HospitalSetService extends IService<HospitalSet> {
-
 }

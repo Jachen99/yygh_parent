@@ -1,12 +1,10 @@
 package space.jachen.yygh.model.base;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import lombok.Data;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Transient;
 
 import java.io.Serializable;
@@ -21,9 +19,11 @@ public class BaseMongoEntity implements Serializable {
     @Id
     private String id;
 
+    @CreatedDate
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @LastModifiedDate
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 

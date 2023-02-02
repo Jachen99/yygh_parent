@@ -16,5 +16,4 @@ import space.jachen.yygh.model.hosp.HospitalSet;
  */
 @Service
 public class HospitalSetServiceImpl extends ServiceImpl<HospitalSetMapper, HospitalSet> implements HospitalSetService {
-
 }

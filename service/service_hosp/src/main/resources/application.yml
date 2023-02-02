@@ -11,7 +11,7 @@ spring:
   # MongoDB数据库连接
   data:
     mongodb:
-      uri: mongodb://192.168.253.134:27017/test
+      uri: mongodb://192.168.253.135:27017/test
   #MySQL数据库连接
   datasource:
     username: root

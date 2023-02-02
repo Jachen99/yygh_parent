@@ -27,4 +27,12 @@ public interface DictService extends IService<Dict> {
     List<Dict> findChlidData(Long id);
 
     void importData(MultipartFile file);
+
+    /**
+     * 根据上级字典编码获取与值获取字典的名称
+     * @param parentDictCode  上级编码
+     * @param value 值
+     * @return
+     */
+    String getNameByParentDictCodeAndValue(String parentDictCode, String value);
 }

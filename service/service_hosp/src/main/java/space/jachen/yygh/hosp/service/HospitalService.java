@@ -1,6 +1,8 @@
 package space.jachen.yygh.hosp.service;
 
+import org.springframework.data.domain.Page;
 import space.jachen.yygh.model.hosp.Hospital;
+import space.jachen.yygh.vo.hosp.HospitalQueryVo;
 
 /**
  * @author JaChen
@@ -19,4 +21,13 @@ public interface HospitalService {
      * @return
      */
     Hospital getHospitalByHoscode(String hoscode);
+
+    /**
+     * 分页查询
+     * @param page 当前页码
+     * @param limit 每页记录数
+     * @param hospitalQueryVo 查询条件
+     */
+    Page<Hospital> findPage(Integer page, Integer limit,
+                            HospitalQueryVo hospitalQueryVo);
 }

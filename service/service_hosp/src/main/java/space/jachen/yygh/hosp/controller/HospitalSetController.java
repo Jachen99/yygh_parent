@@ -9,13 +9,14 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
 import space.jachen.yygh.common.result.JsonData;
+import space.jachen.yygh.common.utils.HttpRequestHelper;
+import space.jachen.yygh.common.utils.UuidUtils;
 import space.jachen.yygh.hosp.service.HospitalSetService;
-import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.model.hosp.HospitalSet;
 import space.jachen.yygh.vo.hosp.HospitalSetQueryVo;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -91,9 +92,16 @@ public class HospitalSetController {
     @PostMapping("/saveHospSet")
     public JsonData<HospitalSet> save(@RequestBody HospitalSet hospitalSet){
 
+        hospitalSet.setSignKey(UuidUtils.getUUID());
+
         boolean save = hospitalSetService.save(hospitalSet);
 
         if (save){
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("sign",hospitalSet.getSignKey());
+            map.put("hoscode",hospitalSet.getHoscode());
+            HttpRequestHelper.sendRequest(map,hospitalSet.getApiUrl()
+                    +"/hospSet/updateSignKey");
             return JsonData.ok();
         }else {
             return JsonData.fail();

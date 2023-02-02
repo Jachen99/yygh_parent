@@ -8,6 +8,10 @@ spring:
   #环境设置：dev、test、prod
   profiles:
     active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
   # MongoDB数据库连接
   data:
     mongodb:

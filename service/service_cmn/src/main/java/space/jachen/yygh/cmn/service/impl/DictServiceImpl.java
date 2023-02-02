@@ -3,22 +3,20 @@ package space.jachen.yygh.cmn.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import space.jachen.yygh.cmn.listener.DictListener;
 import space.jachen.yygh.cmn.mapper.DictMapper;
 import space.jachen.yygh.cmn.service.DictService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 import space.jachen.yygh.common.handler.YyghException;
 import space.jachen.yygh.model.cmn.Dict;
 import space.jachen.yygh.vo.cmn.DictEeVo;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +34,39 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Autowired
     DictService dictService;
+
+
+    @Override
+    public String getNameByParentDictCodeAndValue(String parentDictCode, String value) {
+        //如果value能唯一定位数据字典，parentDictCode可以传空，
+        //例如：省市区的value值能够唯一确定
+        if(StringUtils.isEmpty(parentDictCode)) {
+            Dict dict = baseMapper.selectOne(
+                    new QueryWrapper<Dict>().eq("value", value));
+            if(null != dict) {
+                return dict.getName();
+            }
+        } else {
+            Dict parentDict = this.getDictByDictCode(parentDictCode);
+            if(parentDict != null){
+                Dict dict = baseMapper.selectOne(
+                        new QueryWrapper<Dict>().
+                                eq("parent_id",parentDict.getId()).
+                                eq("value", value));
+                if(null != dict) {
+                    return dict.getName();
+                }
+            }
+        }
+        return null;
+    }
+
+    //实现方法 根据dict_code查询
+    private Dict getDictByDictCode(String dictCode) {
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.eq("dict_code",dictCode);
+        return baseMapper.selectOne(wrapper);
+    }
 
     //添加注解，添加数据字典数据时候，清空缓存
     //@CacheEvict(value = "dict",allEntries = true)

@@ -1,10 +1,13 @@
 package space.jachen.yygh.hosp.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import space.jachen.yygh.hosp.repository.HospitalRepository;
 import space.jachen.yygh.hosp.service.HospitalService;
 import space.jachen.yygh.model.hosp.Hospital;
+import space.jachen.yygh.vo.hosp.HospitalQueryVo;
 
 /**
  * @author JaChen
@@ -15,6 +18,25 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Autowired
     private HospitalRepository repository;
+
+    @Override
+    public Page<Hospital> findPage(Integer page, Integer limit, HospitalQueryVo hospitalQueryVo) {
+        //排序
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+        //分页
+        Pageable pageRequest = PageRequest.of(page-1, limit, sort);
+        //创建Hospital对象
+        Hospital hospital = new Hospital();
+        //将HospitalQueryVo中的属性复制到Hospital对象中
+        BeanUtils.copyProperties(hospitalQueryVo,hospital);
+        //创建匹配器对象，即如何使用查询条件
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)//模糊查询
+                .withIgnoreCase(true);
+        //创建Example对象
+        Example<Hospital> example = Example.of(hospital, exampleMatcher);
+        return repository.findAll(example, pageRequest);
+    }
 
     /**
      * 增加医院信息的方法

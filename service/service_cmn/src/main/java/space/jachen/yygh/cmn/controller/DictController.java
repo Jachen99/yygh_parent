@@ -32,6 +32,18 @@ public class DictController {
     @Autowired
     private DictService dictService;
 
+    @ApiOperation(value = "获取数据字典名称")
+    @GetMapping(value = "/getName/{parentDictCode}/{value}")
+    public String getName(@PathVariable("parentDictCode") String parentDictCode,
+                          @PathVariable("value") String value) {
+        return dictService.getNameByParentDictCodeAndValue(parentDictCode, value);
+    }
+    @ApiOperation(value = "获取数据字典名称")
+    @GetMapping(value = "/getName/{value}")
+    public String getName(@PathVariable("value") String value) {
+        return dictService.getNameByParentDictCodeAndValue(null, value);
+    }
+
 
     /**
      * MultipartFile是Spring中用于处理文件上传请求的类。

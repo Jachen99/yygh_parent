@@ -1,13 +1,13 @@
 package space.jachen.yygh.model.hosp;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import org.springframework.format.annotation.DateTimeFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 import space.jachen.yygh.model.base.BaseMongoEntity;
 
 import java.math.BigDecimal;
@@ -23,9 +23,13 @@ import java.util.Date;
 @Data
 @ApiModel(description = "Schedule")
 @Document("Schedule")
+@Builder
 public class Schedule extends BaseMongoEntity {
 	
 	private static final long serialVersionUID = 1L;
+
+	@Tolerate
+	private Schedule(){}
 
 	@ApiModelProperty(value = "医院编号")
 	@Indexed //普通索引

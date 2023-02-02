@@ -15,4 +15,6 @@ public interface DepartmentService {
     void saveById(Department department);
 
     Page<Department> findPage(Integer page, Integer limit,String hoscode);
+
+    String remove(String hoscode, String depcode);
 }

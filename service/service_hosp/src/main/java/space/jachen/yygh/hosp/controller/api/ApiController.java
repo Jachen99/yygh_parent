@@ -2,6 +2,7 @@ package space.jachen.yygh.hosp.controller.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,8 +12,10 @@ import space.jachen.yygh.common.handler.YyghException;
 import space.jachen.yygh.common.result.JsonData;
 import space.jachen.yygh.hosp.service.DepartmentService;
 import space.jachen.yygh.hosp.service.HospitalService;
+import space.jachen.yygh.hosp.service.ScheduleService;
 import space.jachen.yygh.model.hosp.Department;
 import space.jachen.yygh.model.hosp.Hospital;
+import space.jachen.yygh.model.hosp.Schedule;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -56,9 +59,17 @@ public class ApiController {
     @PostMapping("/saveDepartment")
     public JsonData<Department> saveDepartment(
             Department department){
-
         departmentService.saveById(department);
         return JsonData.ok();
+    }
+
+
+    @ApiOperation("删除科室信息")
+    @PostMapping("/department/remove")
+    public JsonData<String> removeDepartment(HttpServletRequest request){
+        String remove = departmentService.remove(request.getParameter("hoscode"),
+                request.getParameter("depcode"));
+        return JsonData.ok(remove);
     }
 
 
@@ -76,5 +87,41 @@ public class ApiController {
         Page<Department> departmentPage = departmentService.findPage(page,limit,request.getParameter("hoscode"));
         return JsonData.build(departmentPage,200,"查询成功");
     }
+
+
+    @Autowired
+    private ScheduleService scheduleService;
+
+    @ApiOperation("上传排班信息")
+    @PostMapping("/saveSchedule")
+    public JsonData<Schedule> saveSchedule(Schedule schedule){
+        scheduleService.saveSchedule(schedule);
+        return JsonData.ok();
+    }
+
+    @ApiOperation("删除排班信息")
+    @PostMapping("/schedule/remove")
+    public JsonData<String> removeSchedule(HttpServletRequest request){
+        String remove = scheduleService.remove(request.getParameter("hoscode"),
+                request.getParameter("hosScheduleId"));
+        return JsonData.ok(remove);
+    }
+
+    @ApiOperation("查询排班信息")
+    @PostMapping("/schedule/list")
+    public JsonData<Page<Schedule>> querySchedule(HttpServletRequest request){
+
+        Integer page =
+                StringUtils.isEmpty(request.getParameter("page"))
+                ? 1 : Integer.parseInt( request.getParameter("page"));
+        Integer limit =
+                StringUtils.isEmpty(request.getParameter("limit"))
+                ? 0 : Integer.parseInt( request.getParameter("limit"));
+
+        Page<Schedule> servicePage = scheduleService.findPage(page,limit,request
+                .getParameter("hoscode"),request.getParameter("hosScheduleId"));
+        return JsonData.build(servicePage,200,"查询成功");
+    }
+
 
 }

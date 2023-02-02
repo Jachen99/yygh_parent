@@ -10,4 +10,6 @@ import space.jachen.yygh.model.hosp.Schedule;
  */
 @Repository
 public interface ScheduleRepository extends MongoRepository<Schedule,String> {
+    Schedule findByHoscodeAndHosScheduleId(String hoscode,String hosScheduleId);
+
 }

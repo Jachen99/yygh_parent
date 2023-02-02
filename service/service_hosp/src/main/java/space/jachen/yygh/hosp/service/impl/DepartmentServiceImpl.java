@@ -50,4 +50,18 @@ public class DepartmentServiceImpl implements DepartmentService {
         departments.forEach(System.out::println);
         return departments;
     }
+
+    @Override
+    public String remove(String hoscode,String depcode) {
+        Department hasDepartment = repository
+                .findByHoscodeAndDepcode(hoscode, depcode);
+        if (hasDepartment!=null){
+            repository.deleteById(hasDepartment.getId());
+            return "删除成功";
+        }else {
+            return "不存在该科室";
+        }
+    }
+
+
 }

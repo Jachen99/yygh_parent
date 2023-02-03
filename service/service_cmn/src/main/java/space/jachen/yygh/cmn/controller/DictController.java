@@ -5,7 +5,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.multipart.MultipartFile;
 import space.jachen.yygh.cmn.service.DictService;
 import space.jachen.yygh.common.result.JsonData;
@@ -32,13 +31,24 @@ public class DictController {
     @Autowired
     private DictService dictService;
 
-    @ApiOperation(value = "获取数据字典名称")
+
+    @ApiOperation(value = "根据dictCode获取下级节点")
+    @GetMapping(value = "/findByDictCode/{dictCode}")
+    public JsonData<HashMap<String, List<Dict>>> findByDictCode(
+            @PathVariable String dictCode) {
+        List<Dict> list = dictService.findByDictCode(dictCode);
+        HashMap<String, List<Dict>> map = new HashMap<>();
+        map.put("list",list);
+        return JsonData.build(map,200,"查询成功");
+    }
+
+    @ApiOperation(value = "获取数据字典名称v2")
     @GetMapping(value = "/getName/{parentDictCode}/{value}")
     public String getName(@PathVariable("parentDictCode") String parentDictCode,
                           @PathVariable("value") String value) {
         return dictService.getNameByParentDictCodeAndValue(parentDictCode, value);
     }
-    @ApiOperation(value = "获取数据字典名称")
+    @ApiOperation(value = "获取数据字典名称v1")
     @GetMapping(value = "/getName/{value}")
     public String getName(@PathVariable("value") String value) {
         return dictService.getNameByParentDictCodeAndValue(null, value);

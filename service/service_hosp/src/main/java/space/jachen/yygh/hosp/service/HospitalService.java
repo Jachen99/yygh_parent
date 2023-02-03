@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.vo.hosp.HospitalQueryVo;
 
+import java.util.Map;
+
 /**
  * @author JaChen
  * @date 2023/2/2 10:37
@@ -30,4 +32,6 @@ public interface HospitalService {
      */
     Page<Hospital> findPage(Integer page, Integer limit,
                             HospitalQueryVo hospitalQueryVo);
+
+    Map<String, Object> show(String id);
 }

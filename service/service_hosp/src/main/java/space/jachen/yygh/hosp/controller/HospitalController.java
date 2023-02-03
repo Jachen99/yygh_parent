@@ -2,6 +2,7 @@ package space.jachen.yygh.hosp.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.vo.hosp.HospitalQueryVo;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author JaChen
@@ -24,6 +26,17 @@ public class HospitalController {
 
     @Autowired
     private HospitalService hospitalService;
+
+    @ApiOperation(value = "获取医院详情")
+    @GetMapping("/show/{id}")
+    public JsonData<Map<String, Map<String, Object>>> show(
+            @ApiParam(name = "id", value = "医院id", required = true)
+            @PathVariable String id) {
+        Map<String, Map<String, Object>> hashMap = new HashMap<>();
+        Map<String, Object> map = hospitalService.show(id);
+        hashMap.put("hospital",map);
+        return JsonData.build(hashMap,200,"请求成功");
+    }
 
     @ApiOperation(value = "获取分页列表")
     @GetMapping("/{page}/{limit}")

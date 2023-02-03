@@ -3,10 +3,17 @@ package space.jachen.yygh.hosp.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import space.jachen.yygh.cmn.DictFeignClient;
+import space.jachen.yygh.enums.DictEnum;
 import space.jachen.yygh.hosp.repository.HospitalRepository;
 import space.jachen.yygh.hosp.service.HospitalService;
 import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.vo.hosp.HospitalQueryVo;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author JaChen
@@ -17,6 +24,10 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Autowired
     private HospitalRepository repository;
+
+    //注入远程调用数据字典
+    @Resource
+    private DictFeignClient dictFeignClient;
 
     /**
      * 分页查询医院信息
@@ -40,7 +51,40 @@ public class HospitalServiceImpl implements HospitalService {
                 .withIgnoreCase(true);
         //创建Example对象
         Example<Hospital> example = Example.of(hospital, exampleMatcher);
-        return repository.findAll(example, pageRequest);
+        Page<Hospital> hospitals = repository.findAll(example, pageRequest);
+        //获取医院信息
+        List<Hospital> hospitalList = hospitals.getContent();
+        //遍历
+        hospitalList.forEach(this::packHospital);
+        return hospitals;
+    }
+
+    @Override
+    public Map<String, Object> show(String id) {
+        Map<String, Object> result = new HashMap<>();
+        Hospital hospital = this.packHospital(repository.findById(id).get());
+        //医院基本信息（包含医院等级）
+        result.put("hospital",hospital);
+        //单独处理更直观
+        result.put("bookingRule", hospital.getBookingRule());
+        //医院里不需要重复返回
+        hospital.setBookingRule(null);
+        return result;
+    }
+
+    private Hospital packHospital(Hospital hospital) {
+        //获取医院等级
+        String hostypeName = dictFeignClient.getName(DictEnum.HOSTYPE.getDictCode(), hospital.getHostype());
+        //获取省
+        String provinceName = dictFeignClient.getName(hospital.getProvinceCode());
+        //获取市
+        String cityName = dictFeignClient.getName(hospital.getCityCode());
+        //获取区
+        String districtName = dictFeignClient.getName(hospital.getDistrictCode());
+        //封装数据
+        hospital.getParam().put("hostypeString",hostypeName);
+        hospital.getParam().put("fullAddress",provinceName+cityName+districtName+hospital.getAddress());
+        return hospital;
     }
 
     /**
@@ -80,5 +124,6 @@ public class HospitalServiceImpl implements HospitalService {
     public Hospital getHospitalByHoscode(String hoscode) {
         return repository.findByHoscode(hoscode);
     }
+
 
 }

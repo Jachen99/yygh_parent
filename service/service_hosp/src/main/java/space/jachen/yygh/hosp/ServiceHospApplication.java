@@ -2,7 +2,7 @@ package space.jachen.yygh.hosp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
  * @author JaChen
  * @date 2023/01/28
  */
-@EnableDiscoveryClient
+@EnableFeignClients(basePackages = "space.jachen")
 @SpringBootApplication
 @EnableMongoAuditing
 @ComponentScan(basePackages = "space.jachen") // 配置扩大扫描包 让它扫到公共模块下的swagger2

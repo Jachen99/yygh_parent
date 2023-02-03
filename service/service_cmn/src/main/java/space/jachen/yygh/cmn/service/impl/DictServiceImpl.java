@@ -36,13 +36,30 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     DictService dictService;
 
 
+    /**
+     * 根据dictCode查询
+     * @param dictCode
+     * @return
+     */
+    @Override
+    public List<Dict> findByDictCode(String dictCode) {
+
+        Dict codeDict = this.getDictByDictCode(dictCode);
+
+        if(dictCode != null){
+            return findChlidData(codeDict.getId());
+        }
+        return null;
+
+    }
+
     @Override
     public String getNameByParentDictCodeAndValue(String parentDictCode, String value) {
         //如果value能唯一定位数据字典，parentDictCode可以传空，
         //例如：省市区的value值能够唯一确定
         if(StringUtils.isEmpty(parentDictCode)) {
             Dict dict = baseMapper.selectOne(
-                    new QueryWrapper<Dict>().eq("value", value));
+                    new LambdaQueryWrapper<Dict>().eq(Dict::getValue, value));
             if(null != dict) {
                 return dict.getName();
             }
@@ -50,9 +67,9 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
             Dict parentDict = this.getDictByDictCode(parentDictCode);
             if(parentDict != null){
                 Dict dict = baseMapper.selectOne(
-                        new QueryWrapper<Dict>().
-                                eq("parent_id",parentDict.getId()).
-                                eq("value", value));
+                        new LambdaQueryWrapper<Dict>().
+                                eq(Dict::getParentId,parentDict.getId()).
+                                eq(Dict::getValue, value));
                 if(null != dict) {
                     return dict.getName();
                 }
@@ -63,8 +80,8 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     //实现方法 根据dict_code查询
     private Dict getDictByDictCode(String dictCode) {
-        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.eq("dict_code",dictCode);
+        LambdaQueryWrapper<Dict> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Dict::getDictCode,dictCode);
         return baseMapper.selectOne(wrapper);
     }
 

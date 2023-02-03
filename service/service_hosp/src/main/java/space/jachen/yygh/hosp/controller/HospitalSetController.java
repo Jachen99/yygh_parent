@@ -98,6 +98,7 @@ public class HospitalSetController {
 
         if (save){
             HashMap<String, Object> map = new HashMap<>();
+            System.out.println(hospitalSet.getSignKey());
             map.put("sign",hospitalSet.getSignKey());
             map.put("hoscode",hospitalSet.getHoscode());
             HttpRequestHelper.sendRequest(map,hospitalSet.getApiUrl()

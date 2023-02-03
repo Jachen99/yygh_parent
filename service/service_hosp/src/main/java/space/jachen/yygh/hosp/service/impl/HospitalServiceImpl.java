@@ -1,6 +1,5 @@
 package space.jachen.yygh.hosp.service.impl;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,13 @@ public class HospitalServiceImpl implements HospitalService {
     @Autowired
     private HospitalRepository repository;
 
+    /**
+     * 分页查询医院信息
+     * @param page 当前页码
+     * @param limit 每页记录数
+     * @param hospitalQueryVo 查询条件
+     * @return
+     */
     @Override
     public Page<Hospital> findPage(Integer page, Integer limit, HospitalQueryVo hospitalQueryVo) {
         //排序
@@ -27,8 +33,7 @@ public class HospitalServiceImpl implements HospitalService {
         Pageable pageRequest = PageRequest.of(page-1, limit, sort);
         //创建Hospital对象
         Hospital hospital = new Hospital();
-        //将HospitalQueryVo中的属性复制到Hospital对象中
-        BeanUtils.copyProperties(hospitalQueryVo,hospital);
+        hospital.setHosname(hospitalQueryVo.getHosname());
         //创建匹配器对象，即如何使用查询条件
         ExampleMatcher exampleMatcher = ExampleMatcher.matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)//模糊查询

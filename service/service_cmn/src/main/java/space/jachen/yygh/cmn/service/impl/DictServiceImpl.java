@@ -130,7 +130,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         //1、传入parent_id作为查询条件
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
 
-        if (id==120000L||id==230000L|id==610000L){
+        if (id==110000L||id==120000L||id==230000L|id==610000L){
             wrapper.eq("parent_id",id+100L);
         }else {
             wrapper.eq("parent_id",id);
@@ -164,7 +164,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
         LambdaQueryWrapper<Dict> wrapper = new LambdaQueryWrapper<>();
 
-        if (dictId==120000L||dictId==230000L||dictId==610000L){
+        if (dictId==110000L||dictId==120000L||dictId==230000L||dictId==610000L){
             wrapper.eq(Dict::getParentId,dictId+100L);
         }else {
             // 节点的id 与 子节点的父id进行比较

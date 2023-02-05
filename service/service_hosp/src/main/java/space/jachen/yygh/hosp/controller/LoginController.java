@@ -2,7 +2,10 @@ package space.jachen.yygh.hosp.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import space.jachen.yygh.common.result.JsonData;
 
 import java.util.HashMap;
@@ -14,7 +17,6 @@ import java.util.HashMap;
 @Api(tags = "登录接口")
 @RestController
 @RequestMapping("/admin/hosp/user")
-@CrossOrigin
 public class LoginController {
 
     @ApiOperation("登录")

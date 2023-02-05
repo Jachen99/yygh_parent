@@ -34,7 +34,6 @@ public class DepartmentController {
     @GetMapping("/getDeptList/{hoscode}")
     public JsonData<Map<String, Object>> getDeptList(@PathVariable String hoscode) {
         List<DepartmentVo> list = departmentService.findDeptTree(hoscode);
-        System.out.println("list = " + list);
         Map<String, Object> map = new HashMap<>();
         map.put("list",list);
         return JsonData.build(map,200,"查询成功");

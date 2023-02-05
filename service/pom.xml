@@ -23,12 +23,18 @@
     </properties>
 
     <dependencies>
+
+        <!-- 日期转换工具 -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>space.jachen</groupId>
             <artifactId>model</artifactId>
             <version>1.0.1</version>
         </dependency>
-
 
         <dependency>
             <groupId>space.jachen</groupId>

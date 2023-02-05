@@ -1,23 +1,94 @@
 package space.jachen.yygh.hosp.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import space.jachen.yygh.hosp.repository.ScheduleRepository;
 import space.jachen.yygh.hosp.service.ScheduleService;
+import space.jachen.yygh.hosp.utils.WeekUtils;
 import space.jachen.yygh.model.hosp.Schedule;
+import space.jachen.yygh.vo.hosp.BookingScheduleRuleVo;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author JaChen
  * @date 2023/2/2 16:22
  */
 @Service
+@Slf4j
 public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private ScheduleRepository repository;
+
+    @Autowired
+    private MongoTemplate template;
+
+
+    @Override
+    public Map<String, Object> getScheduleRule(long page, long limit, String hoscode, String depcode) {
+
+        // 1、封装查询规则-BookingScheduleRuleVo
+        // 1.1、根据医院编号和科室编号查询的规则
+        Criteria criteria = Criteria.where("hoscode").is(hoscode)
+                .and("depcode").is(depcode);
+        // 分组：根据工作如wordDate进行分组的规则
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(criteria),
+                Aggregation.group("workDate")
+                        .first("workDate").as("workDate")
+                        // 统计同一天的医生数量
+                        .count().as("docname")
+                        // 科室可预约数
+                        .sum("reservedNumber").as("reservedNumber")
+                        // 科室剩余预约数
+                        .sum("availableNumber").as("availableNumber"),
+                // 排序 根据日期降序
+                Aggregation.sort(Sort.Direction.ASC,"workDate"),
+                // 进行分页
+                Aggregation.skip((page-1)*limit),
+                Aggregation.limit(limit)
+        );
+        // 将Schedule.class output到 BookingScheduleRuleVo.class
+        AggregationResults<BookingScheduleRuleVo> bookingScheduleRuleVos = template
+                .aggregate(aggregation, Schedule.class, BookingScheduleRuleVo.class);
+        List<BookingScheduleRuleVo> ruleBooking = bookingScheduleRuleVos.getMappedResults();
+        log.info("ruleBooking:"+ruleBooking);
+        // 转换日期格式
+        for (BookingScheduleRuleVo bookingScheduleRuleVo : ruleBooking) {
+            String dayOfWeek = bookingScheduleRuleVo.getDayOfWeek();
+            String week = WeekUtils.getDayOfWeek(new DateTime(dayOfWeek));
+            bookingScheduleRuleVo.setDayOfWeek(week);
+        }
+
+        // 2、封装分组查询总页数-total
+        Aggregation totalAgg = Aggregation.newAggregation(
+                Aggregation.match(criteria),
+                Aggregation.group("workDate")
+        );
+        AggregationResults<BookingScheduleRuleVo> totalRuleVos = template
+                .aggregate(totalAgg, Schedule.class, BookingScheduleRuleVo.class);
+        List<BookingScheduleRuleVo> ruleTotal = totalRuleVos.getMappedResults();
+        int total = ruleTotal.size();
+        log.info("total:"+total);
+        // 3、封装map集合返回
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("bookingScheduleRuleList",ruleBooking);
+        map.put("total",total);
+        return map;
+    }
+
     @Override
     public void saveSchedule(Schedule schedule) {
         Schedule hasSchedule = repository

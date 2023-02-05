@@ -1,5 +1,6 @@
 package space.jachen.yygh.hosp.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,8 +9,13 @@ import org.springframework.stereotype.Service;
 import space.jachen.yygh.hosp.repository.DepartmentRepository;
 import space.jachen.yygh.hosp.service.DepartmentService;
 import space.jachen.yygh.model.hosp.Department;
+import space.jachen.yygh.vo.hosp.DepartmentVo;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author JaChen
@@ -20,6 +26,47 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Resource
     private DepartmentRepository repository;
+
+    @Override
+    public List<DepartmentVo> findDeptTree(String hoscode) {
+
+        // 0、创建封装结果集信息的对象
+        List<DepartmentVo> resultList = new ArrayList<>();
+
+        // 1、获取所有科室信息
+        Department department = new Department();
+        department.setHoscode(hoscode);
+        Example<Department> example = Example.of(department);
+        List<Department> departmentList = repository.findAll(example);
+
+        // 2、根据bigcode大科室编号进行分组，得到map
+        Map<String, List<Department>> listMap = departmentList.stream().collect(
+                Collectors.groupingBy(Department::getBigcode)
+        );
+        // 3、根据分组查询出小科室的list集合
+        for (Map.Entry<String, List<Department>> listEntry : listMap.entrySet()) {
+            // 3.1 取出来全部信息
+            String bigDepCode = listEntry.getKey();
+            List<Department> samllDevVoList = listEntry.getValue();
+            // 3.2 封装大科室信息
+            DepartmentVo bigDepVo = new DepartmentVo();
+            bigDepVo.setDepcode(bigDepCode);
+            // value中随便拿一个 取出来big名字
+            bigDepVo.setDepname(samllDevVoList.get(0).getBigname());
+            // 3.3 封装小科室信息
+            List<DepartmentVo> childrenList = new ArrayList<>();
+            for (Department smallDev : samllDevVoList) {
+                DepartmentVo smallDepVo = new DepartmentVo();
+                BeanUtils.copyProperties(smallDev,smallDepVo);
+                childrenList.add(smallDepVo);
+            }
+            // 4、将小科室list放入到DepartmentVo
+            bigDepVo.setChildren(childrenList);
+            // 5、创建List<DepartmentVo>，将查询结果存入并返回
+            resultList.add(bigDepVo);
+        }
+        return resultList;
+    }
 
     @Override
     public void saveById(Department department) {

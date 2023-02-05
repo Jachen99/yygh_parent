@@ -18,6 +18,9 @@ import space.jachen.yygh.hosp.utils.WeekUtils;
 import space.jachen.yygh.model.hosp.Schedule;
 import space.jachen.yygh.vo.hosp.BookingScheduleRuleVo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private MongoTemplate template;
 
+
+    @Override
+    public List<Schedule> getDetailSchedule(String hoscode, String depcode, String workDate) {
+
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(workDate);
+           return repository.findByHoscodeAndDepcodeAndWorkDate(hoscode, depcode, date);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
     @Override
     public Map<String, Object> getScheduleRule(long page, long limit, String hoscode, String depcode) {

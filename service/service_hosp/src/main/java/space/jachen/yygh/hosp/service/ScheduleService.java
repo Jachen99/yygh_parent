@@ -3,6 +3,7 @@ package space.jachen.yygh.hosp.service;
 import org.springframework.data.domain.Page;
 import space.jachen.yygh.model.hosp.Schedule;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,4 +25,13 @@ public interface ScheduleService {
      * @return  返回分页后的排班数据
      */
     Map<String, Object> getScheduleRule(long page, long limit, String hoscode, String depcode);
+
+    /**
+     * 查询排班详细信息
+     * @param hoscode 医院编号
+     * @param depcode 科室编号
+     * @param workDate 工作日期
+     * @return 返回排班详情的list
+     */
+    List<Schedule> getDetailSchedule(String hoscode, String depcode, String workDate);
 }

@@ -15,7 +15,8 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 @EnableFeignClients(basePackages = "space.jachen")
 @SpringBootApplication
 @EnableMongoAuditing
-@ComponentScan(basePackages = "space.jachen") // 配置扩大扫描包 让它扫到公共模块下的swagger2
+// 配置扩大扫描包 让它扫到公共模块下的swagger2
+@ComponentScan(basePackages = "space.jachen")
 public class ServiceHospApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServiceHospApplication.class, args);

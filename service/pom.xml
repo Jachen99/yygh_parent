@@ -15,6 +15,7 @@
         <module>service_hosp</module>
         <module>service_cmn</module>
         <module>service_user</module>
+        <module>service_sms</module>
     </modules>
 
     <properties>

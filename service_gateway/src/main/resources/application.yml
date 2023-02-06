@@ -9,21 +9,22 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: service-hosp
-          uri: lb://service-hosp
-          predicates:
+        - id: service-hosp  #设置路由id
+          uri: lb://service-hosp   #设置路由的uri
+          predicates:   #设置路由断言
             - Path=/*/hosp/** # 路径匹配
         - id: service-cmn
           uri: lb://service-cmn
           predicates:
-            - Path=/*/cmn/** # 路径匹配
-        #设置路由id
+            - Path=/*/cmn/**
         - id: service-user
-          #设置路由的uri
           uri: lb://service-user
-          #设置路由断言
           predicates:
             - Path=/*/user/**
+        - id: service-sms
+          uri: lb://service-sms
+          predicates:
+            - Path=/*/sms/**
     nacos:
       discovery:
         server-addr: localhost:8848

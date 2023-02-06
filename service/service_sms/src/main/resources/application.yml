@@ -1,0 +1,25 @@
+# 服务端口
+server:
+  port: 8205
+# 服务名
+spring:
+  application:
+    name: service-sms
+  redis:
+    host: 192.168.253.135
+    port: 6379
+    database: 0
+    timeout: 1800000
+    lettuce:
+      pool:
+        max-active: 20
+        #最大阻塞等待时间(负数表示没限制)
+        max-wait: -1
+        max-idle: 5
+        #最小空闲
+        min-idle: 0
+  # nacos服务地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848

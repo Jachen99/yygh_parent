@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * ${end}
+ * SMS客户端
  *
  * @author JaChen
- * @date ${DATE} ${TIME}
+ * @date 2023/02/07
  */
 @ComponentScan({"space.jachen"})
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)//取消数据源自动配置

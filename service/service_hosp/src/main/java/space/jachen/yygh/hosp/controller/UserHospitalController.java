@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import space.jachen.yygh.common.result.JsonData;
 import space.jachen.yygh.hosp.service.DepartmentService;
 import space.jachen.yygh.hosp.service.HospitalService;
-import space.jachen.yygh.hosp.service.ScheduleService;
 import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.vo.hosp.DepartmentVo;
 import space.jachen.yygh.vo.hosp.HospitalQueryVo;
@@ -30,26 +29,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user/hosp/hospital")
 public class UserHospitalController {
-
-
-    @Autowired
-    private ScheduleService scheduleService;
-
-    /**
-     * 根据医院编号和科室编号获取用户端的排班规则
-     * @param hoscode  医院编号
-     * @param depcode  科室编号
-     * @return  map对象Map<String, Object>
-     */
-    @ApiOperation(value = "获取科室排班规则")
-    @GetMapping("/schedule/{hoscode}/{depcode}")
-    public JsonData<Map<String,Object>> getScheduleRule(
-            @PathVariable String hoscode,
-            @PathVariable String depcode
-    ){
-        Map<String,Object> map = scheduleService.getUserScheduleRule(hoscode,depcode);
-        return JsonData.ok(map);
-    }
 
     @Autowired
     private DepartmentService departmentService;

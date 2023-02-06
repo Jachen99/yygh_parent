@@ -26,7 +26,7 @@ public interface HospitalService {
     Hospital getHospitalByHoscode(String hoscode);
 
     /**
-     * 分页查询
+     * 分页查询医院列表
      * @param page 当前页码
      * @param limit 每页记录数
      * @param hospitalQueryVo 查询条件

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 用户登陆前可见的客户端页面
  * @author JaChen
  * @date 2023/2/6 10:27
  */
@@ -65,7 +66,12 @@ public class UserHospitalController {
     @Autowired
     private HospitalService hospitalService;
 
-    @ApiOperation(value = "根据医院名称获取医院列表")
+    /**
+     * 医院分页的列表  模糊查询
+     * @param hosname 医院的名字
+     * @return  返回List<Hospital>
+     */
+    @ApiOperation(value = "医院分页列表")
     @GetMapping("/findByHosname/{hosname}")
     public JsonData<Map<String, Object>> findByHosname(
             @ApiParam(name = "hosname", value = "医院名称", required = true)
@@ -76,6 +82,13 @@ public class UserHospitalController {
         return JsonData.ok(hashMap);
     }
 
+    /**
+     * 用户端医院显示
+     * @param page 页数
+     * @param limit 每页显示条数
+     * @param hospitalQueryVo 查询条件
+     * @return 将Page<Hospital>封装到map返回
+     */
     @ApiOperation(value = "获取分页列表")
     @GetMapping("/{page}/{limit}")
     public JsonData<Map<String, Object>> index(@PathVariable Integer page,

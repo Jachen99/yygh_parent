@@ -17,6 +17,13 @@ spring:
           uri: lb://service-cmn
           predicates:
             - Path=/*/cmn/** # 路径匹配
+        #设置路由id
+        - id: service-user
+          #设置路由的uri
+          uri: lb://service-user
+          #设置路由断言
+          predicates:
+            - Path=/*/user/**
     nacos:
       discovery:
         server-addr: localhost:8848

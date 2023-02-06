@@ -1,10 +1,15 @@
 package space.jachen.yygh.model.user;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -20,9 +25,13 @@ import java.util.Map;
 @Data
 @ApiModel(description = "UserInfo")
 @TableName("user_info")
+@Builder
 public class UserInfo  {
 	
 	private static final long serialVersionUID = 1L;
+
+	@Tolerate
+	private UserInfo(){}
 
 	@ApiModelProperty(value = "id")
 	@TableId(type = IdType.AUTO)

@@ -2,10 +2,13 @@ package space.jachen.yygh.vo.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 
 @Data
 @ApiModel(description="登录对象")
+@Builder
 public class LoginVo {
 
     @ApiModelProperty(value = "openid")
@@ -19,4 +22,7 @@ public class LoginVo {
 
     @ApiModelProperty(value = "IP")
     private String ip;
+
+    @Tolerate
+    private LoginVo(){};
 }

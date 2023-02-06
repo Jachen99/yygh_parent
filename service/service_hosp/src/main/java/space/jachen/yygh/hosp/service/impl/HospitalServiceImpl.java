@@ -64,6 +64,13 @@ public class HospitalServiceImpl implements HospitalService {
         //创建Hospital对象
         Hospital hospital = new Hospital();
         hospital.setHosname(hospitalQueryVo.getHosname());
+
+        /*
+        修复客户端不能按条件展示医院列表的bug ---> 没有把传入条件赋给hospital
+         */
+        hospital.setHostype(hospitalQueryVo.getHostype());
+        hospital.setDistrictCode(hospitalQueryVo.getDistrictCode());
+
         //创建匹配器对象，即如何使用查询条件
         ExampleMatcher exampleMatcher = ExampleMatcher.matching()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)//模糊查询
@@ -71,8 +78,10 @@ public class HospitalServiceImpl implements HospitalService {
         //创建Example对象
         Example<Hospital> example = Example.of(hospital, exampleMatcher);
         Page<Hospital> hospitals = repository.findAll(example, pageRequest);
-        //获取医院信息
+
+        //获取Page里的医院信息
         List<Hospital> hospitalList = hospitals.getContent();
+
         //遍历
         hospitalList.forEach(this::packHospital);
         return hospitals;
@@ -91,6 +100,11 @@ public class HospitalServiceImpl implements HospitalService {
         return result;
     }
 
+    /**
+     * 远程调用查询字典的方法
+     * @param hospital hospital对象
+     * @return Hospital
+     */
     private Hospital packHospital(Hospital hospital) {
         //获取医院等级
         String hostypeName = dictFeignClient.getName(DictEnum.HOSTYPE.getDictCode(), hospital.getHostype());

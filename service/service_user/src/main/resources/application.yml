@@ -1,0 +1,25 @@
+#服务端口
+server:
+  port: 8203
+#服务名
+spring:
+  application:
+    name: service-user
+  # 环境设置：dev、test、prod
+  profiles:
+    active: dev
+  # mysql数据库连接
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/yygh_user?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #返回json的全局时间格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  # nacos服务地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848

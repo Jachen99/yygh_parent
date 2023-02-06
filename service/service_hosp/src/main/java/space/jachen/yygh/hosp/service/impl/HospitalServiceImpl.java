@@ -29,6 +29,25 @@ public class HospitalServiceImpl implements HospitalService {
     @Resource
     private DictFeignClient dictFeignClient;
 
+
+    @Override
+    public Map<String, Object> item(String hoscode) {
+        Map<String, Object> result = new HashMap<>();
+        //医院详情
+        Hospital hospital = this.packHospital(repository.findByHoscode(hoscode));
+        result.put("hospital", hospital);
+        //预约规则
+        result.put("bookingRule", hospital.getBookingRule());
+        //不需要重复返回
+        hospital.setBookingRule(null);
+        return result;
+    }
+
+    @Override
+    public List<Hospital> findByHosname(String hosname) {
+        return repository.findHospitalByHosnameLike(hosname);
+    }
+
     /**
      * 分页查询医院信息
      * @param page 当前页码
@@ -89,7 +108,7 @@ public class HospitalServiceImpl implements HospitalService {
 
     /**
      * 增加医院信息的方法
-     * @param hospital
+     * @param hospital 传入医院对象
      */
     @Override
     public void saveById(Hospital hospital) {
@@ -117,8 +136,8 @@ public class HospitalServiceImpl implements HospitalService {
 
     /**
      * 查询医院的方法
-     * @param hoscode
-     * @return
+     * @param hoscode  医院编号
+     * @return 医院对象
      */
     @Override
     public Hospital getHospitalByHoscode(String hoscode) {

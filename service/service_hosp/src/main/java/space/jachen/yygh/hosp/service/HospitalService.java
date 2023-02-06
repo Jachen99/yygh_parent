@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.vo.hosp.HospitalQueryVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,4 +35,18 @@ public interface HospitalService {
                             HospitalQueryVo hospitalQueryVo);
 
     Map<String, Object> show(String id);
+
+    /**
+     * 根据名字查询医院列表
+     * @param hosname  医院名字
+     * @return  返回医院列表
+     */
+    List<Hospital> findByHosname(String hosname);
+
+    /**
+     * 医院预约挂号详情
+     * @param hoscode 医院编号
+     * @return 返回一个封装好医院详情和预约规则的Map
+     */
+    Map<String, Object> item(String hoscode);
 }

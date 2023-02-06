@@ -34,4 +34,12 @@ public interface ScheduleService {
      * @return 返回排班详情的list
      */
     List<Schedule> getDetailSchedule(String hoscode, String depcode, String workDate);
+
+    /**
+     * 获取用户端的排班规则
+     * @param hoscode 医院编号
+     * @param depcode 科室编号
+     * @return 返回一个封装好的map
+     */
+    Map<String, Object> getUserScheduleRule(String hoscode, String depcode);
 }

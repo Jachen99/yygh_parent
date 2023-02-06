@@ -35,6 +35,12 @@ public class UserHospitalController {
     @Autowired
     private ScheduleService scheduleService;
 
+    /**
+     * 根据医院编号和科室编号获取用户端的排班规则
+     * @param hoscode  医院编号
+     * @param depcode  科室编号
+     * @return  map对象Map<String, Object>
+     */
     @ApiOperation(value = "获取科室排班规则")
     @GetMapping("/schedule/{hoscode}/{depcode}")
     public JsonData<Map<String,Object>> getScheduleRule(
@@ -48,6 +54,11 @@ public class UserHospitalController {
     @Autowired
     private DepartmentService departmentService;
 
+    /**
+     * 根据医院编号获取科室对象
+     * @param hoscode 医院编号
+     * @return  List<DepartmentVo>
+     */
     @ApiOperation(value = "获取科室列表")
     @GetMapping("/department/{hoscode}")
     public JsonData<Map<String, Object>> department(@PathVariable String hoscode) {
@@ -56,6 +67,12 @@ public class UserHospitalController {
         hashMap.put("list",list);
         return JsonData.ok(hashMap);
     }
+
+    /**
+     * 根据科室编号获取约挂号详情
+     * @param hoscode 医院编号
+     * @return  Map<String, Object>
+     */
     @ApiOperation(value = "医院预约挂号详情")
     @GetMapping("/{hoscode}")
     public JsonData<Map<String, Object>> show(@PathVariable String hoscode) {

@@ -27,7 +27,13 @@ public class ScheduleController {
     @Autowired
     private ScheduleService service;
 
-
+    /**
+     * 查询排班详细信息
+     * @param hoscode 医院编号
+     * @param depcode 科室编号
+     * @param workDate 工作日期
+     * @return 返回排班详情的list
+     */
     @ApiOperation(value = "查询排班详细信息")
     @GetMapping("/getScheduleDetail/{hoscode}/{depcode}/{workDate}")
     public JsonData<Map<String, Object>> getScheduleDetail(@PathVariable String hoscode,
@@ -40,6 +46,14 @@ public class ScheduleController {
         return JsonData.ok(map);
     }
 
+    /**
+     * 分页查询排班规则
+     * @param page  当前页数
+     * @param limit  每页多少条数据
+     * @param hoscode  医院编号
+     * @param depcode  科室编号
+     * @return  返回分页后的排班数据
+     */
     @ApiOperation(value = "查询排班规则")
     @GetMapping("/getScheduleRule/{page}/{limit}/{hoscode}/{depcode}")
     public JsonData<Map<String,Object>> getScheduleRule(

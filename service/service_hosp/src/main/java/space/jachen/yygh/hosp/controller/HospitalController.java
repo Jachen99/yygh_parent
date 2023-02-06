@@ -29,6 +29,11 @@ public class HospitalController {
     @Autowired
     private HospitalService hospitalService;
 
+    /**
+     * 根据id获取医院对象和预约规则
+     * @param id  医院的id
+     * @return 封装好的Map key为hospital和bookingRule
+     */
     @ApiOperation(value = "获取医院详情")
     @GetMapping("/show/{id}")
     public JsonData<Map<String, Map<String, Object>>> show(
@@ -40,6 +45,12 @@ public class HospitalController {
         return JsonData.build(hashMap,200,"请求成功");
     }
 
+    /**
+     * 分页查询医院列表
+     * @param page 当前页码
+     * @param limit 每页记录数
+     * @param hospitalQueryVo 查询条件
+     */
     @ApiOperation(value = "获取分页列表")
     @GetMapping("/{page}/{limit}")
     public JsonData<HashMap<String, Page<Hospital>>> index(

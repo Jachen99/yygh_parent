@@ -12,11 +12,6 @@ import java.util.Map;
  * @date 2023/2/2 10:37
  */
 public interface HospitalService {
-    /**
-     * 新增医院
-     * @param hospital
-     */
-    void saveById(Hospital hospital);
 
     /**
      * 查询医院信息的方法
@@ -34,6 +29,11 @@ public interface HospitalService {
     Page<Hospital> findPage(Integer page, Integer limit,
                             HospitalQueryVo hospitalQueryVo);
 
+    /**
+     * 根据id获取医院对象和预约规则
+     * @param id  医院的id
+     * @return 封装好的Map key为hospital和bookingRule
+     */
     Map<String, Object> show(String id);
 
     /**
@@ -49,4 +49,11 @@ public interface HospitalService {
      * @return 返回一个封装好医院详情和预约规则的Map
      */
     Map<String, Object> item(String hoscode);
+
+
+    /**
+     * 新增医院
+     * @param hospital 医院对象
+     */
+    void saveById(Hospital hospital);
 }

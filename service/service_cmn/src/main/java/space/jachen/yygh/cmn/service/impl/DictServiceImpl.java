@@ -42,7 +42,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
      * 例如：省市区的value值能够唯一确定
      *
      * @param parentDictCode  上级编码
-     * @param value 省市区的value值
+     * @param value 省市区的value值 具有唯一性
      * @return  返回字典数据的name
      */
     @Override

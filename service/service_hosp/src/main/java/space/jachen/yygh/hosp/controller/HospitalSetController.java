@@ -37,30 +37,36 @@ public class HospitalSetController {
     @Autowired
     HospitalSetService hospitalSetService;
 
+    /**
+     * 根据id和状态修改  直接调用IService方法
+     * @param id  医院设置id
+     * @param status  当前状态
+     * @return    返回成功响应
+     */
     @ApiOperation("锁定和解锁医院设置")
     @PutMapping("/lockHospitalSet/{id}/{status}")
     public JsonData<HospitalSet> lockHospitalSet(
             @PathVariable Long id,
             @PathVariable Integer status
     ){
-
-
         HospitalSet hospitalSet = new HospitalSet();
         hospitalSet.setId(id);
         hospitalSet.setStatus(status);
-
         boolean b = hospitalSetService.updateById(hospitalSet);
-
         if (b){
             return JsonData.ok();
         }else {
             return JsonData.fail();
         }
 
-
     }
 
 
+    /**
+     * 根据ids批量删除医院设置
+     * @param ids  传入的id集合
+     * @return 返回响应状态
+     */
     @ApiOperation("批量删除医院设置")
     @DeleteMapping("/batchDelete")
     public JsonData<HospitalSet> batchDelete(@RequestBody List<Long> ids){
@@ -72,8 +78,11 @@ public class HospitalSetController {
         }
     }
 
-
-
+    /**
+     * 根据id查询医院设置
+     * @param id 医院id
+     * @return  返回医院设置对象
+     */
     @ApiOperation("根据id查询医院设置")
     @GetMapping("/getHospSet/{id}")
     public JsonData<HospitalSet> getById(@PathVariable Long id){
@@ -84,9 +93,9 @@ public class HospitalSetController {
 
 
     /**
-     * 医院设置新增
-     * @param hospitalSet
-     * @return
+     * 新增医院设置
+     * @param hospitalSet  传入医院设置对象
+     * @return  返回影响状态
      */
     @ApiOperation(value = "医院设置新增")
     @PostMapping("/saveHospSet")
@@ -113,8 +122,8 @@ public class HospitalSetController {
 
     /**
      * 医院设置修改
-     * @param hospitalSet
-     * @return
+     * @param hospitalSet 传入修改对象
+     * @return   返回响应状态
      */
     @ApiOperation(value = "医院设置修改")
     @PutMapping("/updateHospSet")
@@ -180,9 +189,6 @@ public class HospitalSetController {
     @ApiOperation(value = "医院设置列表")
     @GetMapping("/getAll")
     public JsonData<List<HospitalSet>> getAll(){
-
-        int a = 12/0;
-        System.out.println("a = " + a);
 
         List<HospitalSet> list = hospitalSetService.list();
 

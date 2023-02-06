@@ -12,6 +12,7 @@ import java.util.List;
  */
 @Repository
 public interface HospitalRepository extends MongoRepository<Hospital,String> {
+
     Hospital findByHoscode(String hoscode);
 
     List<Hospital> findHospitalByHosnameLike(String hosname);

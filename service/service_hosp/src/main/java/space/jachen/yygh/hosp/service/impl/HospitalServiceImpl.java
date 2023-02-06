@@ -30,6 +30,32 @@ public class HospitalServiceImpl implements HospitalService {
     private DictFeignClient dictFeignClient;
 
 
+    /**
+     * 远程调用查询字典的方法
+     * @param hospital hospital对象
+     * @return Hospital
+     */
+    private Hospital packHospital(Hospital hospital) {
+        //获取医院等级
+        String hostypeName = dictFeignClient.getName(DictEnum.HOSTYPE.getDictCode(), hospital.getHostype());
+        //获取省
+        String provinceName = dictFeignClient.getName(hospital.getProvinceCode());
+        //获取市
+        String cityName = dictFeignClient.getName(hospital.getCityCode());
+        //获取区
+        String districtName = dictFeignClient.getName(hospital.getDistrictCode());
+        //封装数据
+        hospital.getParam().put("hostypeString",hostypeName);
+        hospital.getParam().put("fullAddress",provinceName+cityName+districtName+hospital.getAddress());
+        return hospital;
+    }
+
+
+    /**
+     * 根据医院编号获取医院对象和预约规则
+     * @param hoscode 医院编号
+     * @return  封装好的Map
+     */
     @Override
     public Map<String, Object> item(String hoscode) {
         Map<String, Object> result = new HashMap<>();
@@ -43,9 +69,24 @@ public class HospitalServiceImpl implements HospitalService {
         return result;
     }
 
+
+    /**
+     * 根据id获取医院对象和预约规则
+     * @param id  医院的id
+     * @return 封装好的Map key为hospital和bookingRule
+     */
     @Override
-    public List<Hospital> findByHosname(String hosname) {
-        return repository.findHospitalByHosnameLike(hosname);
+    public Map<String, Object> show(String id) {
+        Map<String, Object> result = new HashMap<>();
+
+        Hospital hospital = this.packHospital(repository.findById(id).get());
+        //医院基本信息（包含医院等级）
+        result.put("hospital",hospital);
+        //单独处理更直观
+        result.put("bookingRule", hospital.getBookingRule());
+        //医院里不需要重复返回
+        hospital.setBookingRule(null);
+        return result;
     }
 
     /**
@@ -53,7 +94,7 @@ public class HospitalServiceImpl implements HospitalService {
      * @param page 当前页码
      * @param limit 每页记录数
      * @param hospitalQueryVo 查询条件
-     * @return
+     * @return 返回Page<Hospital>
      */
     @Override
     public Page<Hospital> findPage(Integer page, Integer limit, HospitalQueryVo hospitalQueryVo) {
@@ -87,38 +128,28 @@ public class HospitalServiceImpl implements HospitalService {
         return hospitals;
     }
 
+    /**
+     * 根据医院名字获取医院list集合
+     * @param hosname  医院名字
+     * @return List<Hospital>
+     */
     @Override
-    public Map<String, Object> show(String id) {
-        Map<String, Object> result = new HashMap<>();
-        Hospital hospital = this.packHospital(repository.findById(id).get());
-        //医院基本信息（包含医院等级）
-        result.put("hospital",hospital);
-        //单独处理更直观
-        result.put("bookingRule", hospital.getBookingRule());
-        //医院里不需要重复返回
-        hospital.setBookingRule(null);
-        return result;
+    public List<Hospital> findByHosname(String hosname) {
+        return repository.findHospitalByHosnameLike(hosname);
     }
 
+
     /**
-     * 远程调用查询字典的方法
-     * @param hospital hospital对象
-     * @return Hospital
+     * 查询医院的方法
+     * @param hoscode  医院编号
+     * @return 医院对象
      */
-    private Hospital packHospital(Hospital hospital) {
-        //获取医院等级
-        String hostypeName = dictFeignClient.getName(DictEnum.HOSTYPE.getDictCode(), hospital.getHostype());
-        //获取省
-        String provinceName = dictFeignClient.getName(hospital.getProvinceCode());
-        //获取市
-        String cityName = dictFeignClient.getName(hospital.getCityCode());
-        //获取区
-        String districtName = dictFeignClient.getName(hospital.getDistrictCode());
-        //封装数据
-        hospital.getParam().put("hostypeString",hostypeName);
-        hospital.getParam().put("fullAddress",provinceName+cityName+districtName+hospital.getAddress());
-        return hospital;
+    @Override
+    public Hospital getHospitalByHoscode(String hoscode) {
+        return repository.findByHoscode(hoscode);
     }
+
+
 
     /**
      * 增加医院信息的方法
@@ -145,17 +176,6 @@ public class HospitalServiceImpl implements HospitalService {
             repository.save(hospital);
         }
 
-    }
-
-
-    /**
-     * 查询医院的方法
-     * @param hoscode  医院编号
-     * @return 医院对象
-     */
-    @Override
-    public Hospital getHospitalByHoscode(String hoscode) {
-        return repository.findByHoscode(hoscode);
     }
 
 

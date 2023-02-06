@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import space.jachen.yygh.common.handler.YyghException;
 import space.jachen.yygh.common.result.ResultCodeEnum;
+import space.jachen.yygh.common.utils.JwtHelper;
 import space.jachen.yygh.model.user.UserInfo;
 import space.jachen.yygh.user.mapper.UserInfoMapper;
 import space.jachen.yygh.user.service.UserInfoService;
@@ -22,7 +23,11 @@ import java.util.Map;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
 
-
+    /**
+     * 用户登录
+     * @param loginVo  登录Vo对象
+     * @return  Map<String, UserInfo>  key为name
+     */
     @Override
     public Map<String, Object> login(LoginVo loginVo) {
 
@@ -64,7 +69,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         // 5、封装返回信息
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("name",name);
-        // TODO : 封装token信息
+        //  封装token信息
+        String token = JwtHelper.createToken(userInfo.getId(), name);
+        hashMap.put("token",token);
         return hashMap;
     }
 }

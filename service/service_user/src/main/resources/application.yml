@@ -1,6 +1,6 @@
 #服务端口
 server:
-  port: 8203
+  port: 8160
 #服务名
 spring:
   application:
@@ -36,3 +36,8 @@ spring:
         max-idle: 5
         #最小空闲
         min-idle: 0
+wx:
+  open:
+    app_id: wxed9954c01bb89b47
+    app_key: a7482517235173ddb4083788de60b90e
+    url: http://localhost:8160/yygh/user/wx/callback

@@ -28,6 +28,18 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     private StringRedisTemplate template;
 
     /**
+     * 根据openid获取用户信息
+     * @param openid  授权用户唯一标识
+     * @return  UserInfo
+     */
+    @Override
+    public UserInfo findByOpenId(String openid) {
+        LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserInfo::getOpenid,openid);
+        return baseMapper.selectOne(queryWrapper);
+    }
+
+    /**
      * 用户登录
      * @param loginVo  登录Vo对象
      * @return  Map<String, UserInfo>  key为name
@@ -68,16 +80,26 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                     .ACCOUNT_STOP.getCode(), "账号被锁定");
         }
 
+        return packageResult(userInfo);
+    }
+
+    /**
+     * 封装登录信息结果集的通用方法
+     * @param userInfo UserInfo对象
+     * @return  返回一个Map<String,Object> 封装返回信息
+     */
+    @Override
+    public Map<String, Object> packageResult(UserInfo userInfo) {
         // 4.3、获取返回的用户名
         String name = userInfo.getName();
-        // name 赋值顺序 name > nikeName > phone
+        // 页面展示的name 赋值顺序 name > nikeName > phone
         name = StringUtils.isEmpty(name) ? userInfo.getNickName() : name;
-        name = StringUtils.isEmpty(name) ? phone : name;
+        name = StringUtils.isEmpty(name) ? userInfo.getPhone() : name;
 
         // 5、封装返回信息
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("name",name);
-        //  封装token信息
+        //  封装token信息 用户唯一表示 用于单点登录
         String token = JwtHelper.createToken(userInfo.getId(), name);
         hashMap.put("token",token);
         return hashMap;

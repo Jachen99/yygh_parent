@@ -26,6 +26,11 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
         <!-- 日期转换工具 -->
         <dependency>
             <groupId>joda-time</groupId>

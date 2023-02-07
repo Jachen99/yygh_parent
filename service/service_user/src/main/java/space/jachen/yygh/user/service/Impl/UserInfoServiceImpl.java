@@ -56,16 +56,39 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
             throw new YyghException(ResultCodeEnum
                     .ARGUMENT_VALID_ERROR.getCode(), "登录参数为空");
         }
-        // TODO: 整合redis完成验证码校验
+        // 新增1、 整合redis完成验证码校验
         String redisCode = template.opsForValue().get(phone);
         if (!code.equals(redisCode)){
             throw new YyghException(ResultCodeEnum.ARGUMENT_VALID_ERROR.getCode(),"验证码不正确");
         }
 
+        // 新增2 整合微信登录与手机登录
+        // openid存在说明微信不是第一次登录了
+        // 进入分类讨论
+        // 如果不进该条件 继续之前走之前的逻辑
+        String openid = loginVo.getOpenid();
+        if (!StringUtils.isEmpty(openid)){
+            UserInfo userInfoByPhone = this.getByPhone(phone);
+            //No1、手机号不存在 直接插入
+            if(userInfoByPhone == null) {
+                //根据openid查询微信信息
+                UserInfo userInfo = this.getByOpenid(openid);
+                userInfo.setPhone(phone);
+                baseMapper.updateById(userInfo);
+                return this.packageResult(userInfo);
+            }else { //No2、手机号存在 合并后更新
+                UserInfo wechatInfo = this.getByOpenid(openid);
+                //把微信数据设置到手机号数据中
+                userInfoByPhone.setOpenid(wechatInfo.getOpenid());
+                userInfoByPhone.setNickName(wechatInfo.getNickName());
+                baseMapper.deleteById(wechatInfo.getId());
+                baseMapper.updateById(userInfoByPhone);
+                return this.packageResult(userInfoByPhone);
+            }
+        }
+
         // 3、查询用户原始信息
-        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new
-                LambdaQueryWrapper<UserInfo>().eq(UserInfo::getPhone, phone);
-        UserInfo userInfo = baseMapper.selectOne(lambdaQueryWrapper);
+        UserInfo userInfo = this.getByPhone(phone);
 
         // 4、用户身份校验
         // 4.1、 对第一次登录的用户 初始化信息
@@ -80,7 +103,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                     .ACCOUNT_STOP.getCode(), "账号被锁定");
         }
 
-        return packageResult(userInfo);
+        return this.packageResult(userInfo);
     }
 
     /**
@@ -103,5 +126,27 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         String token = JwtHelper.createToken(userInfo.getId(), name);
         hashMap.put("token",token);
         return hashMap;
+    }
+
+    /**
+     * 根据手机号获取UserInfo的方法
+     * @param phone  手机号
+     * @return 返回UserInfo对象
+     */
+    public UserInfo getByPhone(String phone){
+        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new
+                LambdaQueryWrapper<UserInfo>().eq(UserInfo::getPhone, phone);
+        return baseMapper.selectOne(lambdaQueryWrapper);
+    }
+
+    /**
+     * 根据openid获取UserInfo的方法
+     * @param openid  授权用户唯一标识
+     * @return UserInfo
+     */
+    public UserInfo getByOpenid(String openid){
+        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new
+                LambdaQueryWrapper<UserInfo>().eq(UserInfo::getOpenid, openid);
+        return baseMapper.selectOne(lambdaQueryWrapper);
     }
 }

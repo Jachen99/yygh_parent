@@ -16,6 +16,7 @@
         <module>service_cmn</module>
         <module>service_user</module>
         <module>service_sms</module>
+        <module>service_oss</module>
     </modules>
 
     <properties>

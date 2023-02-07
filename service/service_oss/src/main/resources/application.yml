@@ -1,0 +1,24 @@
+#服务端口
+server:
+  port: 8206
+#服务名
+spring:
+  application:
+    name: service-oss
+  #环境设置：dev、test、prod
+  profiles:
+    active: dev
+  #上传文件大小
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+#阿里云OSS，不同的服务器，地址不同
+aliyun:
+  oss:
+    file:
+      endpoint: oss-cn-hangzhou.aliyuncs.com
+      keyid: LTAI5tCsGaFLuHdTqsRX5WQ4
+      keysecret: yZguuONPjh7ZzSSi2Px5NO7NrjUA7U
+      #bucket可以在控制台创建，也可以使用java代码创建
+      bucketname: space-jachen

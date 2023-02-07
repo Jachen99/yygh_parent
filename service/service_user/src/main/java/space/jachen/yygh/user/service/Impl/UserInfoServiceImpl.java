@@ -2,6 +2,8 @@ package space.jachen.yygh.user.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import space.jachen.yygh.common.handler.YyghException;
@@ -22,6 +24,8 @@ import java.util.Map;
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
+    @Autowired
+    private StringRedisTemplate template;
 
     /**
      * 用户登录
@@ -41,6 +45,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                     .ARGUMENT_VALID_ERROR.getCode(), "登录参数为空");
         }
         // TODO: 整合redis完成验证码校验
+        String redisCode = template.opsForValue().get(phone);
+        if (!code.equals(redisCode)){
+            throw new YyghException(ResultCodeEnum.ARGUMENT_VALID_ERROR.getCode(),"验证码不正确");
+        }
 
         // 3、查询用户原始信息
         LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new

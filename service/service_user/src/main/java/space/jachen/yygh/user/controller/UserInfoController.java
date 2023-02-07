@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import space.jachen.yygh.common.result.JsonData;
@@ -18,7 +19,7 @@ import java.util.Map;
  */
 @Api(tags = "用户登录接口")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/yygh/user")
 public class UserInfoController {
 
     @Autowired
@@ -26,7 +27,7 @@ public class UserInfoController {
 
     @ApiOperation(value = "用户登录")
     @PostMapping("/login")
-    public JsonData<Map<String,Object>> login(LoginVo loginVo){
+    public JsonData<Map<String,Object>> login(@RequestBody LoginVo loginVo){
 
         Map<String,Object> map = infoService.login(loginVo);
 

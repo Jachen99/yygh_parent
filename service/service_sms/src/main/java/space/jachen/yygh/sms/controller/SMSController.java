@@ -43,7 +43,7 @@ public class SMSController {
         boolean isSend = service.send(phone, code);
         if(isSend) {
             //发送成功，验证码放到redis，设置有效时间
-            redisTemplate.opsForValue().set(phone, code,5, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(phone, code,365, TimeUnit.DAYS);
             return JsonData.ok();
         } else {
             return JsonData.fail("发送短信失败");

@@ -56,7 +56,6 @@ public class WechatServiceImpl implements WechatService {
                 ConstantPropertiesUtil.WX_OPEN_APP_ID,
                 ConstantPropertiesUtil.WX_OPEN_APP_SECRET,
                 code);
-
         try {
             // 2、调用HttpClient请求微信接口 获取opneid和access_token
             String accessToken = HttpClientUtils.get(accessTokenUrl);
@@ -82,6 +81,7 @@ public class WechatServiceImpl implements WechatService {
                 // 3.3、获取用户信息存入数据库
                 String nickname = infoObject.getString("nickname");
                 String headimgurl = infoObject.getString("headimgurl");
+                log.info("微信注册用户头像："+headimgurl);
                 userInfo = UserInfo.builder().nickName(nickname).img(headimgurl)
                         .status(1).openid(openid).build(); // 注意 ：这里没有判断手机号 我们再if外面判断
                 userInfoService.save(userInfo);
@@ -104,7 +104,6 @@ public class WechatServiceImpl implements WechatService {
             throw new YyghException(ResultCodeEnum.SERVICE_ERROR.getCode(),"调取微信接口的http客户端出错了~");
         }
     }
-
 
     /**
      * 获取微信登录参数

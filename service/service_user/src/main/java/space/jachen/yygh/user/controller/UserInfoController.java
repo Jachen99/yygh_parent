@@ -25,7 +25,6 @@ import java.util.Map;
 @RequestMapping("/yygh/user")
 @Slf4j
 public class UserInfoController {
-
     @Autowired
     private UserInfoService infoService;
 
@@ -35,6 +34,7 @@ public class UserInfoController {
                              HttpServletRequest request) {
         /*
         不明白为什么响应俩次token?
+        因为第一次是OPTIONS请求 预检
          */
         String token = request.getHeader("token");
         log.info("用户认证的token："+token);
@@ -58,11 +58,8 @@ public class UserInfoController {
     @ApiOperation(value = "用户登录")
     @PostMapping("/login")
     public JsonData<Map<String,Object>> login(@RequestBody LoginVo loginVo){
-
         Map<String,Object> map = infoService.login(loginVo);
-
         return JsonData.ok(map);
-
     }
 
 }

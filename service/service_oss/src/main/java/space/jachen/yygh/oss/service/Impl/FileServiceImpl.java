@@ -50,8 +50,10 @@ public class FileServiceImpl implements FileService {
             PutObjectResult result = ossClient.putObject(putObjectRequest);
             // 如果上传成功，则返回200。
             log.info(""+result.getResponse().getStatusCode());
+            String uri = result.getResponse().getUri();
+            log.info("响应给前端的url图片路径"+uri);
             // 设置返回的文件路径
-            return result.getResponse().getUri();
+            return uri;
         } catch (Exception oe) {
             oe.printStackTrace();
         } finally {

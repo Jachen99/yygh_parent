@@ -4,6 +4,7 @@ package space.jachen.yygh.user.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.yygh.common.result.JsonData;
 import space.jachen.yygh.common.utils.JwtHelper;
@@ -35,6 +36,7 @@ public class PatientController {
     @GetMapping("/auth/findAll")
     public JsonData<Map<String, List<Patient>>> findAll(HttpServletRequest request){
         String token = request.getHeader("token");
+        if (StringUtils.isEmpty(token))return null;
         Long userId = JwtHelper.getUserId(token);
         List<Patient> patientList = patientService.getAll(userId);
         Map<String, List<Patient>> hashMap = new HashMap<>();
@@ -59,6 +61,7 @@ public class PatientController {
     @PostMapping("/auth/save")
     public JsonData<Object> saveOne(@RequestBody Patient patient, HttpServletRequest request){
         String token = request.getHeader("token");
+        if (StringUtils.isEmpty(token))return null;
         Long userId = JwtHelper.getUserId(token);
         patient.setUserId(userId);
         patientService.save(patient);

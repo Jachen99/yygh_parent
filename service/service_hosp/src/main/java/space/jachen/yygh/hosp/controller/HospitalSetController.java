@@ -20,9 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * <p>
- * 医院设置表 前端控制器
- * </p>
+ * 平台医院设置控制器
  *
  * @author jachen
  * @since 2023-01-13

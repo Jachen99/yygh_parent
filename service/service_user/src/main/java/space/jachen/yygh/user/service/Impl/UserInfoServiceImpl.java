@@ -1,6 +1,8 @@
 package space.jachen.yygh.user.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +19,7 @@ import space.jachen.yygh.user.mapper.UserInfoMapper;
 import space.jachen.yygh.user.service.UserInfoService;
 import space.jachen.yygh.vo.user.LoginVo;
 import space.jachen.yygh.vo.user.UserAuthVo;
+import space.jachen.yygh.vo.user.UserInfoQueryVo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +35,50 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Autowired
     private StringRedisTemplate template;
 
+    @Autowired
+    private UserInfoService userInfoService;
 
+    /**
+     * 用户列表（条件查询带分页）
+     * @param pageParam   分页条件
+     * @param userInfoQueryVo  userInfoQueryVo对象
+     * @return  IPage<UserInfo>
+     */
+    @Override
+    public IPage<UserInfo> selectPage(Page<UserInfo> pageParam, UserInfoQueryVo userInfoQueryVo) {
+
+        // 1、获取条件
+        String name = userInfoQueryVo.getKeyword(); //用户名称
+        Integer status = userInfoQueryVo.getStatus();//用户状态
+        Integer authStatus = userInfoQueryVo.getAuthStatus(); //认证状态
+        String createTimeBegin = userInfoQueryVo.getCreateTimeBegin(); //开始时间
+        String createTimeEnd = userInfoQueryVo.getCreateTimeEnd(); //结束时间
+        // 2、封装查询条件
+        LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<>();
+        wrapper =  StringUtils.isEmpty(name) ? wrapper.like(UserInfo::getName,name) : wrapper;
+        wrapper =  StringUtils.isEmpty(status) ? wrapper.eq(UserInfo::getStatus,status) : wrapper;
+        wrapper =  StringUtils.isEmpty(authStatus) ? wrapper.eq(UserInfo::getAuthStatus,authStatus) : wrapper;
+        wrapper =  StringUtils.isEmpty(createTimeBegin) ? wrapper.ge(UserInfo::getCreateTime,createTimeBegin) : wrapper;
+        wrapper =  StringUtils.isEmpty(createTimeEnd) ? wrapper.le(UserInfo::getCreateTime,createTimeEnd) : wrapper;
+        // 3、查询数据库
+        IPage<UserInfo> userInfoPage = baseMapper.selectPage(pageParam, wrapper);
+        userInfoPage.getRecords().forEach(this::packageUserInfo);
+        return userInfoPage;
+    }
+
+    /**
+     * 编号变成对应值封装
+     *
+     * @param userInfo UserInfo对象
+     */
+    private void packageUserInfo(UserInfo userInfo) {
+        //处理认证状态编码
+        userInfo.getParam().put("authStatusString",
+                AuthStatusEnum.getStatusNameByStatus(userInfo.getAuthStatus()));
+        //处理用户状态 0  1
+        String statusString = userInfo.getStatus() ==0 ?"锁定" : "正常";
+        userInfo.getParam().put("statusString",statusString);
+    }
 
     /**
      * 用户认证的接口

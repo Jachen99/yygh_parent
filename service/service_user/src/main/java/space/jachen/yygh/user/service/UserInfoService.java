@@ -1,9 +1,12 @@
 package space.jachen.yygh.user.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.yygh.model.user.UserInfo;
 import space.jachen.yygh.vo.user.LoginVo;
 import space.jachen.yygh.vo.user.UserAuthVo;
+import space.jachen.yygh.vo.user.UserInfoQueryVo;
 
 import java.util.Map;
 
@@ -13,6 +16,14 @@ import java.util.Map;
  */
 public interface UserInfoService extends IService<UserInfo> {
 
+
+    /**
+     * 用户列表（条件查询带分页）
+     * @param pageParam   分页条件
+     * @param userInfoQueryVo  userInfoQueryVo对象
+     * @return  IPage<UserInfo>
+     */
+    IPage<UserInfo> selectPage(Page<UserInfo> pageParam, UserInfoQueryVo userInfoQueryVo);
 
     /**
      * 用户认证的接口

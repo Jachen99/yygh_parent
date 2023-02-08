@@ -11,6 +11,7 @@ import space.jachen.yygh.common.result.JsonData;
 import java.util.HashMap;
 
 /**
+ * 平台登录控制器
  * @author JaChen
  * @date 2023/1/28 16:40
  */

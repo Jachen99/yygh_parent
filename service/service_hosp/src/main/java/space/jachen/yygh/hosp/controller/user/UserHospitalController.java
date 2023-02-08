@@ -1,4 +1,4 @@
-package space.jachen.yygh.hosp.controller;
+package space.jachen.yygh.hosp.controller.user;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

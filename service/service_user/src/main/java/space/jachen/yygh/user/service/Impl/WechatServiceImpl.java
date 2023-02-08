@@ -82,7 +82,7 @@ public class WechatServiceImpl implements WechatService {
                 // 3.3、获取用户信息存入数据库
                 String nickname = infoObject.getString("nickname");
                 String headimgurl = infoObject.getString("headimgurl");
-                userInfo = UserInfo.builder().nickName(nickname).certificatesUrl(headimgurl)
+                userInfo = UserInfo.builder().nickName(nickname).img(headimgurl)
                         .status(1).openid(openid).build(); // 注意 ：这里没有判断手机号 我们再if外面判断
                 userInfoService.save(userInfo);
             }
@@ -95,7 +95,8 @@ public class WechatServiceImpl implements WechatService {
             } else {
                 packageMap.put("openid", "");
             }
-
+            log.info("登录后重定向返回的数据：token="+packageMap.get("token")
+            +"openid="+packageMap.get("openid")+"name=" +URLEncoder.encode(packageMap.get("name").toString(),"utf-8"));
             // 5、重定向 跳转到前端页面
             return "redirect:http://localhost:3000/weixin/callback?token=" +packageMap.get("token")
                     + "&openid=" +packageMap.get("openid") +"&name=" +URLEncoder.encode(packageMap.get("name").toString(),"utf-8");

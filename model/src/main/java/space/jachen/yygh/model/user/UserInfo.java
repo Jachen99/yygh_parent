@@ -71,6 +71,10 @@ public class UserInfo  {
 	@TableField("name")
 	private String name;
 
+	@ApiModelProperty(value = "用户头像")
+	@TableField("img")
+	private String img;
+
 	@ApiModelProperty(value = "证件类型")
 	@TableField("certificates_type")
 	private String certificatesType;

@@ -9,10 +9,12 @@ import org.springframework.util.StringUtils;
 import space.jachen.yygh.common.handler.YyghException;
 import space.jachen.yygh.common.result.ResultCodeEnum;
 import space.jachen.yygh.common.utils.JwtHelper;
+import space.jachen.yygh.enums.AuthStatusEnum;
 import space.jachen.yygh.model.user.UserInfo;
 import space.jachen.yygh.user.mapper.UserInfoMapper;
 import space.jachen.yygh.user.service.UserInfoService;
 import space.jachen.yygh.vo.user.LoginVo;
+import space.jachen.yygh.vo.user.UserAuthVo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +28,28 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Autowired
     private StringRedisTemplate template;
+
+
+
+    /**
+     * 用户认证的接口
+     * @param userId     用户id
+     * @param userAuthVo 用户认证Vo值对象
+     */
+    @Override
+    public void userAuth(Long userId, UserAuthVo userAuthVo) {
+        UserInfo userInfo = baseMapper.selectById(userId);
+        if (userInfo!=null){
+            userInfo = UserInfo.builder().name(userAuthVo.getName())
+                    .authStatus(AuthStatusEnum.AUTH_RUN.getStatus())
+                    .certificatesNo(userAuthVo.getCertificatesNo())
+                    .certificatesType(userAuthVo.getCertificatesType())
+                    .certificatesUrl(userAuthVo.getCertificatesUrl()).build();
+            baseMapper.updateById(userInfo);
+        }else {
+            throw new YyghException(ResultCodeEnum.LOGIN_MOBLE_ERROR.getCode(),"用户信息异常，无法进行用户认证");
+        }
+    }
 
     /**
      * 根据openid获取用户信息

@@ -2,6 +2,8 @@ package space.jachen.yygh.user.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import java.util.Map;
  * @date 2023/2/6 15:21
  */
 @Service
+@Slf4j
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
     @Autowired
@@ -40,12 +43,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public void userAuth(Long userId, UserAuthVo userAuthVo) {
         UserInfo userInfo = baseMapper.selectById(userId);
         if (userInfo!=null){
-            userInfo = UserInfo.builder().name(userAuthVo.getName())
+            /*userInfo = UserInfo.builder().name(userAuthVo.getName())
                     .authStatus(AuthStatusEnum.AUTH_RUN.getStatus())
                     .certificatesNo(userAuthVo.getCertificatesNo())
                     .certificatesType(userAuthVo.getCertificatesType())
-                    .certificatesUrl(userAuthVo.getCertificatesUrl()).build();
+                    .certificatesUrl(userAuthVo.getCertificatesUrl()).build();*/
+            userInfo.setAuthStatus(AuthStatusEnum.AUTH_RUN.getStatus());
+            BeanUtils.copyProperties(userAuthVo,userInfo);
             baseMapper.updateById(userInfo);
+            log.info("存入数据库用户认证的数据："+userInfo);
         }else {
             throw new YyghException(ResultCodeEnum.LOGIN_MOBLE_ERROR.getCode(),"用户信息异常，无法进行用户认证");
         }

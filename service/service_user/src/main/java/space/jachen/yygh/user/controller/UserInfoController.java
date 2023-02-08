@@ -29,6 +29,20 @@ public class UserInfoController {
     @Autowired
     private UserInfoService infoService;
 
+    @ApiOperation("用户认证")
+    @PostMapping("/auth/userAuth")
+    public JsonData<String> userAuth(@RequestBody UserAuthVo userAuthVo,
+                             HttpServletRequest request) {
+        /*
+        不明白为什么响应俩次token?
+         */
+        String token = request.getHeader("token");
+        log.info("用户认证的token："+token);
+        Long userId = JwtHelper.getUserId(token);
+        infoService.userAuth(userId, userAuthVo);
+        return JsonData.ok();
+    }
+
     @ApiOperation("获取用户信息")
     @GetMapping("/auth/getUserInfo")
     public JsonData<Map<String, UserInfo>> getUserInfo(HttpServletRequest request) {
@@ -36,21 +50,9 @@ public class UserInfoController {
         log.info("获取用户信息的token："+token);
         Long userId = JwtHelper.getUserId(token);
         UserInfo userInfo = infoService.getById(userId);
-
         Map<String, UserInfo> map = new HashMap<>();
         map.put("userInfo",userInfo);
         return JsonData.ok(map);
-    }
-
-    @ApiOperation("用户认证")
-    @PostMapping("/auth/userAuth")
-    public JsonData<String> userAuth(@RequestBody UserAuthVo userAuthVo,
-                             HttpServletRequest request) {
-        String token = request.getHeader("token");
-        log.info("用户认证的token："+token);
-        Long userId = JwtHelper.getUserId(token);
-        infoService.userAuth(userId, userAuthVo);
-        return JsonData.ok();
     }
 
     @ApiOperation(value = "用户登录")

@@ -150,6 +150,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 userInfoByPhone.setNickName(wechatInfo.getNickName());
                 baseMapper.deleteById(wechatInfo.getId());
                 baseMapper.updateById(userInfoByPhone);
+                //重置用户id为微信登录时id 避免用户没有退出登录而改变了id无法获取权限的bug
+                userInfoByPhone.setId(wechatInfo.getId());
                 return this.packageResult(userInfoByPhone);
             }
         }

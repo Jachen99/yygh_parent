@@ -29,6 +29,15 @@ public class UserController {
     @Resource
     private UserInfoService userInfoService;
 
+    @ApiOperation("用户审批")
+    @GetMapping("/approval/{id}/{authStatus}")
+    public JsonData<Object> userApproval(
+            @PathVariable(value = "id")Long userId,
+            @PathVariable Integer authStatus){
+        userInfoService.approval(userId,authStatus);
+        return JsonData.ok();
+    }
+
     @ApiOperation("平台用户详情")
     @GetMapping("/show/{id}")
     public JsonData<Map<String,Object>> userDetailShow(@PathVariable(value = "id") Long userId){

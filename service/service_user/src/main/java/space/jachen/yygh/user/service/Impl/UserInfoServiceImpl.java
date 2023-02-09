@@ -36,9 +36,19 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Autowired
     private StringRedisTemplate template;
-
     @Autowired
     private PatientService patientService;
+
+    /**
+     * 用户信息审批
+     * @param userId  用户登录id
+     * @param authStatus  审批状态
+     */
+    @Override
+    public void approval(Long userId, Integer authStatus) {
+        UserInfo userInfo = baseMapper.selectById(userId);
+        userInfo.setAuthStatus(authStatus);
+    }
 
     /**
      * 根据用户id查询用户详情

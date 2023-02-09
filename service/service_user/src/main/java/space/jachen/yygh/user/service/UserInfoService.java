@@ -17,6 +17,13 @@ public interface UserInfoService extends IService<UserInfo> {
 
 
     /**
+     * 用户信息审批
+     * @param userId  用户登录id
+     * @param authStatus  审批状态
+     */
+    void approval(Long userId, Integer authStatus);
+
+    /**
      * 根据用户id查询用户详情
      * @param userId  用户登录id
      * @return Map<String, Object>

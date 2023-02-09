@@ -2,6 +2,7 @@ package space.jachen.yygh.user.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import space.jachen.yygh.model.user.UserInfo;
 
 /**
@@ -12,6 +13,7 @@ import space.jachen.yygh.model.user.UserInfo;
  * @author jachen
  * @since 2023-02-06
  */
+@Mapper
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
 
 }

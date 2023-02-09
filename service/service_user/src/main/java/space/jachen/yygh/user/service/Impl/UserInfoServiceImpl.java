@@ -1,7 +1,6 @@
 package space.jachen.yygh.user.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +34,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Autowired
     private StringRedisTemplate template;
 
-    @Autowired
-    private UserInfoService userInfoService;
-
     /**
      * 用户列表（条件查询带分页）
      * @param pageParam   分页条件
@@ -45,7 +41,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
      * @return  IPage<UserInfo>
      */
     @Override
-    public IPage<UserInfo> selectPage(Page<UserInfo> pageParam, UserInfoQueryVo userInfoQueryVo) {
+    public Page<UserInfo> selectPage(Page<UserInfo> pageParam, UserInfoQueryVo userInfoQueryVo) {
 
         // 1、获取条件
         String name = userInfoQueryVo.getKeyword(); //用户名称
@@ -55,13 +51,13 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         String createTimeEnd = userInfoQueryVo.getCreateTimeEnd(); //结束时间
         // 2、封装查询条件
         LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<>();
-        wrapper =  StringUtils.isEmpty(name) ? wrapper.like(UserInfo::getName,name) : wrapper;
-        wrapper =  StringUtils.isEmpty(status) ? wrapper.eq(UserInfo::getStatus,status) : wrapper;
-        wrapper =  StringUtils.isEmpty(authStatus) ? wrapper.eq(UserInfo::getAuthStatus,authStatus) : wrapper;
-        wrapper =  StringUtils.isEmpty(createTimeBegin) ? wrapper.ge(UserInfo::getCreateTime,createTimeBegin) : wrapper;
-        wrapper =  StringUtils.isEmpty(createTimeEnd) ? wrapper.le(UserInfo::getCreateTime,createTimeEnd) : wrapper;
+        wrapper =  !StringUtils.isEmpty(name) ? wrapper.like(UserInfo::getName,name) : wrapper;
+        wrapper =  !StringUtils.isEmpty(status) ? wrapper.eq(UserInfo::getStatus,status) : wrapper;
+        wrapper =  !StringUtils.isEmpty(authStatus) ? wrapper.eq(UserInfo::getAuthStatus,authStatus) : wrapper;
+        wrapper =  !StringUtils.isEmpty(createTimeBegin) ? wrapper.ge(UserInfo::getCreateTime,createTimeBegin) : wrapper;
+        wrapper =  !StringUtils.isEmpty(createTimeEnd) ? wrapper.le(UserInfo::getCreateTime,createTimeEnd) : wrapper;
         // 3、查询数据库
-        IPage<UserInfo> userInfoPage = baseMapper.selectPage(pageParam, wrapper);
+        Page<UserInfo> userInfoPage = baseMapper.selectPage(pageParam, wrapper);
         userInfoPage.getRecords().forEach(this::packageUserInfo);
         return userInfoPage;
     }
@@ -89,11 +85,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public void userAuth(Long userId, UserAuthVo userAuthVo) {
         UserInfo userInfo = baseMapper.selectById(userId);
         if (userInfo!=null){
-            /*userInfo = UserInfo.builder().name(userAuthVo.getName())
-                    .authStatus(AuthStatusEnum.AUTH_RUN.getStatus())
-                    .certificatesNo(userAuthVo.getCertificatesNo())
-                    .certificatesType(userAuthVo.getCertificatesType())
-                    .certificatesUrl(userAuthVo.getCertificatesUrl()).build();*/
             userInfo.setAuthStatus(AuthStatusEnum.AUTH_RUN.getStatus());
             BeanUtils.copyProperties(userAuthVo,userInfo);
             baseMapper.updateById(userInfo);

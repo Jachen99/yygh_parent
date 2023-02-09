@@ -48,6 +48,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public void approval(Long userId, Integer authStatus) {
         UserInfo userInfo = baseMapper.selectById(userId);
         userInfo.setAuthStatus(authStatus);
+        baseMapper.updateById(userInfo);
     }
 
     /**

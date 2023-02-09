@@ -12,14 +12,14 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import space.jachen.yygh.common.handler.YyghException;
+import space.jachen.yygh.common.result.ResultCodeEnum;
 import space.jachen.yygh.hosp.repository.ScheduleRepository;
 import space.jachen.yygh.hosp.service.ScheduleService;
 import space.jachen.yygh.hosp.utils.WeekUtils;
 import space.jachen.yygh.model.hosp.Schedule;
 import space.jachen.yygh.vo.hosp.BookingScheduleRuleVo;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,10 +50,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<Schedule> getDetailSchedule(String hoscode, String depcode, String workDate) {
 
         try {
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(workDate);
+            //用DateTime替换
+            //Date date = new SimpleDateFormat("yyyy-MM-dd").parse(workDate);
+            Date date = new DateTime(workDate).toDate();
             return repository.findByHoscodeAndDepcodeAndWorkDate(hoscode, depcode, date);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new YyghException(ResultCodeEnum.DATA_ERROR.getCode(),"日期转换异常");
         }
     }
 

@@ -29,7 +29,15 @@ public class UserController {
     @Resource
     private UserInfoService userInfoService;
 
-    @ApiOperation("用户列表")
+    @ApiOperation("平台用户详情")
+    @GetMapping("/show/{id}")
+    public JsonData<Map<String,Object>> userDetailShow(@PathVariable(value = "id") Long userId){
+
+        Map<String,Object> result = userInfoService.userDetailShow(userId);
+        return JsonData.ok(result);
+    }
+
+    @ApiOperation("平台用户列表")
     @GetMapping("/{page}/{limit}")
     public JsonData<Map<String, IPage<UserInfo>>> list(@PathVariable Long page,
                          @PathVariable Long limit,

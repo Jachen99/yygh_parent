@@ -13,14 +13,17 @@ import space.jachen.yygh.common.handler.YyghException;
 import space.jachen.yygh.common.result.ResultCodeEnum;
 import space.jachen.yygh.common.utils.JwtHelper;
 import space.jachen.yygh.enums.AuthStatusEnum;
+import space.jachen.yygh.model.user.Patient;
 import space.jachen.yygh.model.user.UserInfo;
 import space.jachen.yygh.user.mapper.UserInfoMapper;
+import space.jachen.yygh.user.service.PatientService;
 import space.jachen.yygh.user.service.UserInfoService;
 import space.jachen.yygh.vo.user.LoginVo;
 import space.jachen.yygh.vo.user.UserAuthVo;
 import space.jachen.yygh.vo.user.UserInfoQueryVo;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +36,27 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Autowired
     private StringRedisTemplate template;
+
+    @Autowired
+    private PatientService patientService;
+
+    /**
+     * 根据用户id查询用户详情
+     * @param userId  用户登录id
+     * @return Map<String, UserInfo>
+     */
+    @Override
+    public Map<String, Object> userDetailShow(Long userId) {
+
+        Map<String, Object> hashMap = new HashMap<>();
+        UserInfo userInfo = baseMapper.selectById(userId);
+        this.packageUserInfo(userInfo);
+        hashMap.put("userInfo",userInfo);
+        // 获取该账号下的所有就诊人信息
+        List<Patient> patientList = patientService.getAll(userId);
+        hashMap.put("patientList",patientList);
+        return hashMap;
+    }
 
     /**
      * 用户列表（条件查询带分页）

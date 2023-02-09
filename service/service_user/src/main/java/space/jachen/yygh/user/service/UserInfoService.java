@@ -17,6 +17,13 @@ public interface UserInfoService extends IService<UserInfo> {
 
 
     /**
+     * 根据用户id查询用户详情
+     * @param userId  用户登录id
+     * @return Map<String, Object>
+     */
+    Map<String, Object> userDetailShow(Long userId);
+
+    /**
      * 用户列表（条件查询带分页）
      * @param pageParam   分页条件
      * @param userInfoQueryVo  userInfoQueryVo对象
@@ -52,4 +59,5 @@ public interface UserInfoService extends IService<UserInfo> {
      * @return  Map<String, UserInfo>
      */
     Map<String, Object> login(LoginVo loginVo);
+
 }

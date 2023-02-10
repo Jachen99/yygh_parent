@@ -14,6 +14,7 @@ import space.jachen.yygh.hosp.service.DepartmentService;
 import space.jachen.yygh.hosp.service.HospitalService;
 import space.jachen.yygh.hosp.service.ScheduleService;
 import space.jachen.yygh.model.hosp.Hospital;
+import space.jachen.yygh.model.hosp.Schedule;
 import space.jachen.yygh.vo.hosp.DepartmentVo;
 import space.jachen.yygh.vo.hosp.HospitalQueryVo;
 
@@ -30,12 +31,24 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user/hosp/hospital")
 public class UserHospitalController {
-
+    @Autowired
+    private HospitalService hospitalService;
     @Autowired
     private DepartmentService departmentService;
-
     @Autowired
     private ScheduleService scheduleService;
+
+    @ApiOperation(value = "获取排班数据详情")
+    @GetMapping("/auth/findScheduleList/{hoscode}/{depcode}/{workDate}")
+    public JsonData<Map<String, List<Schedule>>> findScheduleList(
+            @PathVariable String hoscode,
+            @PathVariable String depcode,
+            @PathVariable String workDate) {
+        List<Schedule> scheduleList = scheduleService.getDetailSchedule(hoscode, depcode, workDate);
+        Map<String, List<Schedule>> hashMap = new HashMap<>();
+        hashMap.put("scheduleList",scheduleList);
+        return JsonData.ok(hashMap);
+    }
 
     @ApiOperation(value = "获取可预约排班数据")
     @GetMapping("/auth/getBookingScheduleRule/{page}/{limit}/{hoscode}/{depcode}")
@@ -74,9 +87,6 @@ public class UserHospitalController {
         Map<String, Object> map = hospitalService.item(hoscode);
         return JsonData.ok(map);
     }
-
-    @Autowired
-    private HospitalService hospitalService;
 
     /**
      * 医院分页的列表  模糊查询

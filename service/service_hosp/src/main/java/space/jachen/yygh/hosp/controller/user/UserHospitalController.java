@@ -45,7 +45,6 @@ public class UserHospitalController {
             @PathVariable String hoscode,
             @PathVariable String depcode) {
         Map<String, Object> map = scheduleService
-                // TODO: 用户挂号页面数据
                 .getSubscribeScheduleRule(page, limit, hoscode, depcode);
         return JsonData.ok(map);
     }

@@ -5,17 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>space.jachen</groupId>
-        <artifactId>yygh_parent</artifactId>
+        <artifactId>service</artifactId>
         <version>1.0.1</version>
     </parent>
 
-    <artifactId>service_client</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>service_cmn_client</module>
-        <module>service_user_client</module>
-        <module>service_hosp_client</module>
-    </modules>
+    <artifactId>service_orders</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -26,29 +20,18 @@
     <dependencies>
         <dependency>
             <groupId>space.jachen</groupId>
-            <artifactId>service_utils</artifactId>
+            <artifactId>service_cmn_client</artifactId>
             <version>1.0.1</version>
-            <scope>provided </scope>
         </dependency>
-
         <dependency>
             <groupId>space.jachen</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>service_hosp_client</artifactId>
             <version>1.0.1</version>
-            <scope>provided </scope>
         </dependency>
-
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <scope>provided </scope>
-        </dependency>
-
-        <!-- 服务调用feign -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <scope>provided </scope>
+            <groupId>space.jachen</groupId>
+            <artifactId>service_user_client</artifactId>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
 

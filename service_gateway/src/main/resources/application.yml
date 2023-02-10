@@ -29,6 +29,10 @@ spring:
           uri: lb://service-oss
           predicates:
             - Path=/*/oss/**
+        - id: service-orders
+          uri: lb://service-orders
+          predicates:
+            - Path=/*/order/**
     nacos:
       discovery:
         server-addr: localhost:8848

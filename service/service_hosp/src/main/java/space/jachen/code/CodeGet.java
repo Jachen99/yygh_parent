@@ -23,7 +23,7 @@ public class CodeGet {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
 
-        gc.setOutputDir("G:\\IDEAwork\\yygh_parent\\service\\service_user"+"/src/main/java");
+        gc.setOutputDir("G:\\IDEAwork\\yygh_parent\\service\\service_orders"+"/src/main/java");
 
         gc.setServiceName("%sService");	//去掉Service接口的首字母I
         gc.setAuthor("jachen");
@@ -33,7 +33,7 @@ public class CodeGet {
 
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/yygh_user?characterEncoding=utf-8");
+        dsc.setUrl("jdbc:mysql://localhost:3306/yygh_order?characterEncoding=utf-8");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("123456");
@@ -43,7 +43,7 @@ public class CodeGet {
         // 4、包配置
         PackageConfig pc = new PackageConfig();
         pc.setParent("space.jachen.yygh");
-        pc.setModuleName("user"); //模块名
+        pc.setModuleName("order"); //模块名
         pc.setController("controller");
         pc.setService("service");
         pc.setMapper("mapper");
@@ -53,7 +53,7 @@ public class CodeGet {
         StrategyConfig strategy = new StrategyConfig();
 
         // 表名
-        strategy.setInclude("patient");
+        strategy.setInclude("order_info");
 
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
 

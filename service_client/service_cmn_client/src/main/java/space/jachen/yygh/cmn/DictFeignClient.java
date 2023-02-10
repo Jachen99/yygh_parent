@@ -10,12 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
  */
 @FeignClient(value = "service-cmn")
 public interface DictFeignClient {
-
-    String URL = "/admin/cmn/dict";
-
-    @GetMapping(value = URL+"/getName/{parentDictCode}/{value}")
-    String getName(@PathVariable("parentDictCode") String parentDictCode,
-                   @PathVariable("value") String value);
-    @GetMapping(value = URL+"/getName/{value}")
+    String baseURL = "/admin/cmn/dict";
+    @GetMapping(value = baseURL+"/getName/{parentDictCode}/{value}")
+    String getName(@PathVariable("parentDictCode") String parentDictCode, @PathVariable("value") String value);
+    @GetMapping(value = baseURL+"/getName/{value}")
     String getName(@PathVariable("value") String value);
 }

@@ -9,7 +9,7 @@
         <version>1.0.1</version>
     </parent>
 
-    <artifactId>service_cmn_client</artifactId>
+    <artifactId>service_user_client</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

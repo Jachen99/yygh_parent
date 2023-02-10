@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import space.jachen.yygh.common.result.JsonData;
 import space.jachen.yygh.hosp.service.DepartmentService;
 import space.jachen.yygh.hosp.service.HospitalService;
+import space.jachen.yygh.hosp.service.ScheduleService;
 import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.vo.hosp.DepartmentVo;
 import space.jachen.yygh.vo.hosp.HospitalQueryVo;
@@ -32,6 +33,22 @@ public class UserHospitalController {
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    private ScheduleService scheduleService;
+
+    @ApiOperation(value = "获取可预约排班数据")
+    @GetMapping("/auth/getBookingScheduleRule/{page}/{limit}/{hoscode}/{depcode}")
+    public JsonData<Map<String, Object>> getBookingSchedule(
+            @PathVariable Integer page,
+            @PathVariable Integer limit,
+            @PathVariable String hoscode,
+            @PathVariable String depcode) {
+        Map<String, Object> map = scheduleService
+                // TODO: 用户挂号页面数据
+                .getSubscribeScheduleRule(page, limit, hoscode, depcode);
+        return JsonData.ok(map);
+    }
 
     /**
      * 根据医院编号获取科室对象
@@ -67,7 +84,7 @@ public class UserHospitalController {
      * @param hosname 医院的名字
      * @return  返回List<Hospital>
      */
-    @ApiOperation(value = "医院分页列表")
+    @ApiOperation(value = "根据名字获取医院列表")
     @GetMapping("/findByHosname/{hosname}")
     public JsonData<Map<String, Object>> findByHosname(
             @ApiParam(name = "hosname", value = "医院名称", required = true)

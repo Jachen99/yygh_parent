@@ -24,6 +24,16 @@ public interface ScheduleService {
     Page<Schedule> findPage(Integer page, Integer limit, String hoscode, String hosScheduleId);
 
     /**
+     * 分页查询可预约排班规则
+     * @param page  当前页数
+     * @param limit  每页多少条数据
+     * @param hoscode  医院编号
+     * @param depcode  科室编号
+     * @return  返回分页后的可预约排班数据
+     */
+    Map<String, Object> getSubscribeScheduleRule(Integer page, Integer limit, String hoscode, String depcode);
+
+    /**
      * 分页查询排班规则
      * @param page  当前页数
      * @param limit  每页多少条数据

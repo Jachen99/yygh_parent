@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>service_utils</module>
+        <module>rabbit_util</module>
     </modules>
 
     <properties>

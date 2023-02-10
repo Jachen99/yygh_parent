@@ -12,6 +12,12 @@ import java.util.Map;
  */
 public interface ScheduleService {
 
+    /**
+     * 根据id获取排班的详细信息
+     * @param id id
+     * @return Schedule
+     */
+    Schedule getById(String id);
 
     /**
      * 根据医院编号和排班编号查找分页后的Schedule排班信息

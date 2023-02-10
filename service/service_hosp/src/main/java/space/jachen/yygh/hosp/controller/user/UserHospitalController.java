@@ -38,6 +38,16 @@ public class UserHospitalController {
     @Autowired
     private ScheduleService scheduleService;
 
+    @ApiOperation(value = "用户获取挂号时排班详情")
+    @GetMapping("/auth/getSchedule/{id}")
+    public JsonData<HashMap<String, Schedule>> getScheduleList(
+            @PathVariable String id) {
+        Schedule schedule = scheduleService.getById(id);
+        HashMap<String, Schedule> hashMap = new HashMap<>();
+        hashMap.put("schedule",schedule);
+        return JsonData.ok(hashMap);
+    }
+
     @ApiOperation(value = "获取排班数据详情")
     @GetMapping("/auth/findScheduleList/{hoscode}/{depcode}/{workDate}")
     public JsonData<Map<String, List<Schedule>>> findScheduleList(

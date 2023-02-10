@@ -48,6 +48,23 @@ public class ScheduleServiceImpl implements ScheduleService {
     private MongoTemplate template;
 
     /**
+     * 根据id获取排班的详细信息
+     * @param id id
+     * @return Schedule
+     */
+    @Override
+    public Schedule getById(String id) {
+        Schedule schedule = scheduleRepository.findById(id).get();
+        // 医院名称
+        String hosname = hospitalRepository.findByHoscode(schedule.getHoscode()).getHosname();
+        // 科室名称
+        String depname = departmentRepository.findByHoscodeAndDepcode(schedule.getHoscode(), schedule.getDepcode()).getDepname();
+        schedule.getParam().put("hosname",hosname);
+        schedule.getParam().put("depname",depname);
+        return schedule;
+    }
+
+    /**
      * 分页查询可预约排班规则
      * @param page  当前页数
      * @param limit  每页多少条数据
@@ -127,8 +144,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 if (stopTime.isBeforeNow())
                     bookingScheduleRuleVo.setStatus(-1);
             }
-
-
             bookingScheduleRuleVoList.add(bookingScheduleRuleVo);
         }
         // 6.封装结果集resultMap

@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import space.jachen.yygh.common.utils.RandomUtil;
 import space.jachen.yygh.sms.service.SMSService;
 import space.jachen.yygh.sms.utils.HttpUtils;
+import space.jachen.yygh.vo.msm.MsmVo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +22,18 @@ public class SMSServiceImpl implements SMSService {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Override
+    public boolean send(MsmVo msmVo) {
+        if(!StringUtils.isEmpty(msmVo.getPhone())) {
+            //String code = (String)msmVo.getParam().get("code");
+            //仅为了测试
+            String code = RandomUtil.getFourBitRandom();
+            //调用当前类中发送短信的方法
+            return this.send(msmVo.getPhone(),code);
+        }
+        return false;
+    }
 
     @Override
     public boolean send(String phone, String code) {

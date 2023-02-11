@@ -1,5 +1,7 @@
 package space.jachen.yygh.sms.service;
 
+import space.jachen.yygh.vo.msm.MsmVo;
+
 /**
  * @author JaChen
  * @date 2023/2/6 23:49
@@ -7,7 +9,16 @@ package space.jachen.yygh.sms.service;
 public interface SMSService {
 
     /**
+     * 发送短信接口
+     *
+     * @param msmVo
+     * @return
+     */
+    boolean send(MsmVo msmVo);
+
+    /**
      * 发送验证码的接口
+     *
      * @param phone  手机号
      * @param code  验证码
      * @return  返回boolean

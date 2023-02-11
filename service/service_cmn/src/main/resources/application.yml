@@ -1,24 +1,20 @@
-# 服务端口
+############################################### 服务端口 ################################################################
 server:
   port: 8202
-#服务名
 spring:
   devtools:
     livereload:
       enabled: false # remove Unable to start LiveReload server
   application:
     name: service-cmn
-  #环境设置：dev、test、prod
   profiles:
-    active: dev
-  #MySQL数据库连接
+    active: dev # 环境设置：dev、test、prod
   datasource:
     username: root
     password: 123456
     url: jdbc:mysql://localhost:3306/yygh_cmn?characterEncoding=utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver
-  #返回JSON的全局时间格式
-  jackson:
+  jackson:  # 返回JSON的全局时间格式
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
   redis:
@@ -29,17 +25,16 @@ spring:
     lettuce:
       pool:
         max-active: 20
-        max-wait: -1 #最大阻塞等待时间(负数表示没限制)
+        max-wait: -1 # 最大阻塞等待时间(负数表示没限制)
         max-idle: 5
         min-idle: 0
-
+############################################## 数据库配置信息 ############################################################
 #数据库配置信息
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:space/jachen/yygh/cmn/mapper/*/*.xml
-
-# 设置日志级别
+############################################## 设置日志级别 ##############################################################
 logging:
   level:
     root: info

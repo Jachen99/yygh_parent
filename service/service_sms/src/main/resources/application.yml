@@ -1,7 +1,7 @@
-# 服务端口
+############################################### 服务端口 ################################################################
 server:
   port: 8205
-# 服务名
+############################################### spring ################################################################
 spring:
   devtools:
     livereload:
@@ -16,13 +16,15 @@ spring:
     lettuce:
       pool:
         max-active: 20
-        #最大阻塞等待时间(负数表示没限制)
-        max-wait: -1
+        max-wait: -1  #最大阻塞等待时间(负数表示没限制)
         max-idle: 5
-        #最小空闲
-        min-idle: 0
-  # nacos服务地址
+        min-idle: 0  #最小空闲
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
+        server-addr: localhost:8848  # nacos服务地址
+  rabbitmq:    # rabbitmq地址
+    host: 192.168.253.137
+    port: 5672
+    username: guest
+    password: guest

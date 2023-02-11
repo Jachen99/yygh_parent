@@ -1,24 +1,20 @@
-#服务端口
+############################################### 服务端口 ################################################################
 server:
   port: 8160
-#服务名
+############################################### spring #################################################################
 spring:
   application:
     name: service-user
-  # 环境设置：dev、test、prod
   profiles:
-    active: dev
-  # mysql数据库连接
-  datasource:
+    active: dev  # 环境设置：dev、test、prod
+  datasource:  # mysql数据库连接
     username: root
     password: 123456
     url: jdbc:mysql://localhost:3306/yygh_user?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
-  #返回json的全局时间格式
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd HH:mm:ss  # 返回json的全局时间格式
     time-zone: GMT+8
-  # nacos服务地址
   cloud:
     nacos:
       discovery:
@@ -31,16 +27,16 @@ spring:
     lettuce:
       pool:
         max-active: 20
-        #最大阻塞等待时间(负数表示没限制)
-        max-wait: -1
+        max-wait: -1  #最大阻塞等待时间(负数表示没限制)
         max-idle: 5
-        #最小空闲
         min-idle: 0
+############################################### 微信接口 ################################################################
 wx:
   open:
     app_id: wxed9954c01bb89b47
     app_key: a7482517235173ddb4083788de60b90e
     url: http://localhost:8160/yygh/user/wx/callback
+####################################### mybatis-plus配置 ################################################################
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

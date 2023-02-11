@@ -18,7 +18,7 @@ spring:
 aliyun:
   oss:  #阿里云OSS
     file:
-      endpoint: oss-cn-hangzhou.aliyuncs.com
-      keyid: LTAI5tCsGaFLuHdTqsRX5WQ4
-      keysecret: yZguuONPjh7ZzSSi2Px5NO7NrjUA7U
+      endpoint: 
+      keyid: 
+      keysecret: 
       bucketname: space-jachen  # bucket可以在控制台创建，也可以使用java代码创建

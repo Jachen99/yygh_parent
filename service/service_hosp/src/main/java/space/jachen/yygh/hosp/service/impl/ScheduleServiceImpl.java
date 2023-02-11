@@ -59,8 +59,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         String hosname = hospitalRepository.findByHoscode(schedule.getHoscode()).getHosname();
         // 科室名称
         String depname = departmentRepository.findByHoscodeAndDepcode(schedule.getHoscode(), schedule.getDepcode()).getDepname();
+        // 周几
+        Date workDate = schedule.getWorkDate();
+        String dayOfWeek = WeekUtils.getDayOfWeek(new DateTime(workDate));
         schedule.getParam().put("hosname",hosname);
         schedule.getParam().put("depname",depname);
+        schedule.getParam().put("dayOfWeek",dayOfWeek);
         return schedule;
     }
 

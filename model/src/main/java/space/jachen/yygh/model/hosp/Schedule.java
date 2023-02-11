@@ -1,5 +1,6 @@
 package space.jachen.yygh.model.hosp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -7,7 +8,6 @@ import lombok.Data;
 import lombok.experimental.Tolerate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 import space.jachen.yygh.model.base.BaseMongoEntity;
 
 import java.math.BigDecimal;
@@ -49,7 +49,7 @@ public class Schedule extends BaseMongoEntity {
 	private String skill;
 
 	@ApiModelProperty(value = "排班日期")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date workDate;
 
 	@ApiModelProperty(value = "排班时间（0：上午 1：下午）")

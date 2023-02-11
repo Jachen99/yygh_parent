@@ -15,6 +15,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
 
     /**
      * 生成订单
+     *
      * @param scheduleId  排班id
      * @param patientId  就诊人id
      * @return  返回订单id

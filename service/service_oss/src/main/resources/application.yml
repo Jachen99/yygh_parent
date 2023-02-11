@@ -3,6 +3,9 @@ server:
   port: 8206
 #服务名
 spring:
+  devtools:
+    livereload:
+      enabled: false # remove Unable to start LiveReload server
   application:
     name: service-oss
   #环境设置：dev、test、prod

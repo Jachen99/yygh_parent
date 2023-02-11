@@ -27,6 +27,7 @@ import space.jachen.yygh.model.hosp.Department;
 import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.model.hosp.Schedule;
 import space.jachen.yygh.vo.hosp.BookingScheduleRuleVo;
+import space.jachen.yygh.vo.hosp.ScheduleOrderVo;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +49,61 @@ public class ScheduleServiceImpl implements ScheduleService {
     private MongoTemplate template;
 
     /**
+     * 根据id获取排班的详细信息 订单需要
+     *
+     * @param scheduleId 排班id
+     * @return ScheduleOrderVo
+     */
+    @Override
+    public ScheduleOrderVo getScheduleOrderVo(String scheduleId) {
+
+        Schedule schedule = scheduleRepository.findById(scheduleId).get();
+        // 医院编号
+        String hoscode = schedule.getHoscode();
+        // 科室编号
+        String depcode = schedule.getDepcode();
+        // 医院对象
+        Hospital hospital = hospitalRepository.findByHoscode(hoscode);
+        // 预约规则
+        BookingRule bookingRule = hospital.getBookingRule();
+        // 科室对象
+        Department department = departmentRepository.findByHoscodeAndDepcode(hoscode, depcode);
+        // 退号时间 (如：8：00)
+        String quitTime = bookingRule.getQuitTime();
+        // 退号截止天数 （如：就诊前一天为-1，当天为0）
+        Integer quitDay = bookingRule.getQuitDay();
+        // 排班日期
+        Date workDate = schedule.getWorkDate();
+        // 封装Schedule中不存在的数据到scheduleOrderVo中
+        return ScheduleOrderVo.builder()
+                .depcode(depcode)
+                .hoscode(hoscode)
+                .title(schedule.getTitle())
+                .hosScheduleId(schedule.getHosScheduleId())
+                .availableNumber(schedule.getAvailableNumber())
+                .amount(schedule.getAmount())
+                // 科室名称
+                .depname(department.getDepname())
+                // 医院名称
+                .hosname(hospital.getHosname())
+                // 排班日期
+                .reserveDate(schedule.getWorkDate())
+                // 排班时间
+                .reserveTime(schedule.getWorkTime())
+                // 当天挂号开始时间 = 现在日期 + 放号时间
+                .startTime(DateUtils.getDateTime(new Date(), bookingRule.getReleaseTime()).toDate())
+                // 当天挂号截止时间 = 现在日期 + 停号时间
+                .stopTime(DateUtils.getDateTime(new Date(), bookingRule.getStopTime()).toDate())
+                // 退号时间 = 排班日期+退号截止天数 + 具体退号时间
+                .quitTime(DateUtils.getDateTime(new DateTime(workDate).plusDays(quitDay).toDate(),quitTime).toDate())
+                // 预约截止时间 = 现在时间+预约周期 + 具体停号时间
+                .endTime(DateUtils.getDateTime(new DateTime().plusDays(bookingRule.getCycle()).toDate(), bookingRule.getStopTime()).toDate())
+                .build();
+    }
+
+    /**
      * 根据id获取排班的详细信息
+     *
      * @param id id
      * @return Schedule
      */
@@ -70,10 +125,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 分页查询可预约排班规则
+     *
      * @param page  当前页数
      * @param limit  每页多少条数据
      * @param hoscode  医院编号
      * @param depcode  科室编号
+     *
      * @return  返回分页后的可预约排班数据
      */
     @Override
@@ -212,9 +269,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 查询排班详细信息
+     *
      * @param hoscode 医院编号
      * @param depcode 科室编号
      * @param workDate 工作日期
+     *
      * @return 返回排班详情的list
      */
     @Override
@@ -235,6 +294,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @param limit  每页多少条数据
      * @param hoscode  医院编号
      * @param depcode  科室编号
+     *
      * @return 返回map  key为bookingScheduleRuleList和total
      */
     @Override
@@ -270,6 +330,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 聚合分组 封装可预约排班规则数据
+     *
      * @return List<BookingScheduleRuleVo>
      */
     public List<BookingScheduleRuleVo> packageAggregation(Criteria criteria,long page, long limit){
@@ -300,10 +361,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 根据医院编号和排班编号查找分页后的Schedule排班信息
+     *
      * @param page  第几页
      * @param limit  每页多少数据
      * @param hoscode  科室编号
      * @param hosScheduleId  排班编号
+     *
      * @return   分页后的Schedule排班信息
      */
     @Override
@@ -317,8 +380,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 根据医院编号和科室id删除
+     *
      * @param hoscode  医院编号
      * @param hosScheduleId 排班编号
+     *
      * @return String 删除状态
      */
     @Override
@@ -334,6 +399,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 新增或更新科室信息
+     *
      * @param schedule  传入科室对象
      */
     @Override

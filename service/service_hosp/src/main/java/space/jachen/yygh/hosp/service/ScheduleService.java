@@ -2,6 +2,7 @@ package space.jachen.yygh.hosp.service;
 
 import org.springframework.data.domain.Page;
 import space.jachen.yygh.model.hosp.Schedule;
+import space.jachen.yygh.vo.hosp.ScheduleOrderVo;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,14 @@ import java.util.Map;
  * @date 2023/2/2 16:22
  */
 public interface ScheduleService {
+
+    /**
+     * 根据id获取排班的详细信息 订单需要
+     *
+     * @param scheduleId 排班id
+     * @return ScheduleOrderVo
+     */
+    ScheduleOrderVo getScheduleOrderVo(String scheduleId);
 
     /**
      * 根据id获取排班的详细信息

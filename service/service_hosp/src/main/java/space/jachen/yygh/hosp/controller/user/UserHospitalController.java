@@ -17,6 +17,7 @@ import space.jachen.yygh.model.hosp.Hospital;
 import space.jachen.yygh.model.hosp.Schedule;
 import space.jachen.yygh.vo.hosp.DepartmentVo;
 import space.jachen.yygh.vo.hosp.HospitalQueryVo;
+import space.jachen.yygh.vo.hosp.ScheduleOrderVo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,12 @@ public class UserHospitalController {
     private DepartmentService departmentService;
     @Autowired
     private ScheduleService scheduleService;
+
+    @ApiOperation(value = "根据排班id获取订单需要的排班信息")
+    @GetMapping("/getScheduleOrderVo/{scheduleId}")
+    public ScheduleOrderVo getScheduleOrderVo(@PathVariable String scheduleId){
+        return scheduleService.getScheduleOrderVo(scheduleId);
+    }
 
     @ApiOperation(value = "用户获取挂号时排班详情")
     @GetMapping("/auth/getSchedule/{id}")

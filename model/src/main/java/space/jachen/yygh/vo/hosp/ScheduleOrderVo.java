@@ -1,16 +1,21 @@
 package space.jachen.yygh.vo.hosp;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
 @ApiModel(description = "Schedule")
+@Builder
 public class ScheduleOrderVo {
+
+	@Tolerate
+	public ScheduleOrderVo(){}
 
 	@ApiModelProperty(value = "医院编号")
 	private String hoscode;

@@ -8,10 +8,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 排班服务接口
+ *
  * @author JaChen
  * @date 2023/2/2 16:22
  */
 public interface ScheduleService {
+
+    /**
+     * 修改排班
+     * 用户下单后需要更新排班中可预约号的数量
+     *
+     * @param schedule 排班实体
+     */
+    void update(Schedule schedule);
 
     /**
      * 根据id获取排班的详细信息 订单需要
@@ -23,6 +33,7 @@ public interface ScheduleService {
 
     /**
      * 根据id获取排班的详细信息
+     *
      * @param id id
      * @return Schedule
      */
@@ -30,6 +41,7 @@ public interface ScheduleService {
 
     /**
      * 根据医院编号和排班编号查找分页后的Schedule排班信息
+     *
      * @param page  第几页
      * @param limit  每页多少数据
      * @param hoscode  科室编号
@@ -40,6 +52,7 @@ public interface ScheduleService {
 
     /**
      * 分页查询可预约排班规则
+     *
      * @param page  当前页数
      * @param limit  每页多少条数据
      * @param hoscode  医院编号
@@ -50,6 +63,7 @@ public interface ScheduleService {
 
     /**
      * 分页查询排班规则
+     *
      * @param page  当前页数
      * @param limit  每页多少条数据
      * @param hoscode  医院编号
@@ -60,6 +74,7 @@ public interface ScheduleService {
 
     /**
      * 查询排班详细信息
+     *
      * @param hoscode 医院编号
      * @param depcode 科室编号
      * @param workDate 工作日期
@@ -69,6 +84,7 @@ public interface ScheduleService {
 
     /**
      * 根据医院编号和科室id删除
+     *
      * @param hoscode  医院编号
      * @param hosScheduleId 排班编号
      * @return String 删除状态
@@ -77,6 +93,7 @@ public interface ScheduleService {
 
     /**
      * 新增或更新科室信息
+     *
      * @param schedule  传入科室对象
      */
     void saveSchedule(Schedule schedule);

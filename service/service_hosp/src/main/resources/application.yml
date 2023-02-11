@@ -5,11 +5,11 @@ server:
 spring:
   devtools:
     livereload:
-      enabled: false # remove Unable to start LiveReload server
+      enabled: false  # remove Unable to start LiveReload server
   application:
     name: service-hosp
   profiles:
-    active: dev #环境设置：dev、test、prod
+    active: dev  # 环境设置：dev、test、prod
   cloud:
     nacos:
       discovery:
@@ -22,9 +22,14 @@ spring:
     password: 123456
     url: jdbc:mysql://localhost:3306/yygh_hosp?characterEncoding=utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jackson: #返回JSON的全局时间格式
+  jackson:  # 返回JSON的全局时间格式
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  rabbitmq:
+    host: 192.168.253.137   # rabbitmq地址
+    port: 5672
+    username: guest
+    password: guest
 ############################################## 数据库配置信息 ############################################################
 mybatis-plus:
   configuration:

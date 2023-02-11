@@ -11,8 +11,8 @@ public interface SMSService {
     /**
      * 发送短信接口
      *
-     * @param msmVo
-     * @return
+     * @param msmVo 短信实体
+     * @return  boolean
      */
     boolean send(MsmVo msmVo);
 

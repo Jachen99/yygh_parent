@@ -20,6 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>space.jachen</groupId>
+            <artifactId>rabbit_util</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>space.jachen</groupId>
             <artifactId>service_cmn_client</artifactId>
             <version>1.0.1</version>
         </dependency>

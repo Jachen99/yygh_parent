@@ -2,15 +2,18 @@ package space.jachen.yygh.vo.order;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 import space.jachen.yygh.vo.msm.MsmVo;
 
-import java.util.Date;
-
 @Data
+@Builder
 @ApiModel(description = "OrderMqVo")
 public class OrderMqVo {
 
+	@Tolerate
+	public OrderMqVo(){}
 	@ApiModelProperty(value = "可预约数")
 	private Integer reservedNumber;
 

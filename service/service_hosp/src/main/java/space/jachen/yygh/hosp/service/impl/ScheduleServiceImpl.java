@@ -33,6 +33,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 排班服务实现类
+ *
  * @author JaChen
  * @date 2023/2/2 16:22
  */
@@ -47,6 +49,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     private DepartmentRepository departmentRepository;
     @Autowired
     private MongoTemplate template;
+
+    /**
+     * 修改排班实现类
+     * 用户下单后需要更新排班中可预约号的数量
+     * 此接口用于监听器类HospitalReceiver调用，发送消息给RabbitMQ队列进行消费，处理后给指定用户发送短信。
+     *
+     * @param schedule 排班实体
+     */
+    @Override
+    public void update(Schedule schedule) {
+        // save方法主键一致就是更新
+        scheduleRepository.save(schedule);
+    }
 
     /**
      * 根据id获取排班的详细信息 订单需要

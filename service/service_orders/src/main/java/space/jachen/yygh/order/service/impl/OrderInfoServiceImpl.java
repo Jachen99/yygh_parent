@@ -3,6 +3,7 @@ package space.jachen.yygh.order.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,12 @@ import space.jachen.yygh.model.order.OrderInfo;
 import space.jachen.yygh.model.user.Patient;
 import space.jachen.yygh.order.mapper.OrderInfoMapper;
 import space.jachen.yygh.order.service.OrderInfoService;
+import space.jachen.yygh.rabbitmq.config.MqConst;
+import space.jachen.yygh.rabbitmq.service.RabbitService;
 import space.jachen.yygh.user.PatientFeignClient;
 import space.jachen.yygh.vo.hosp.ScheduleOrderVo;
+import space.jachen.yygh.vo.msm.MsmVo;
+import space.jachen.yygh.vo.order.OrderMqVo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,9 +41,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private PatientFeignClient patientFeignClient;
     @Autowired
     private HospFeignClient hospFeignClient;
+    @Autowired
+    private RabbitService rabbitService;
 
     /**
-     * 生成订单
+     * 生成订单信息
      *
      * @param scheduleId  排班id
      * @param patientId  就诊人id
@@ -62,13 +69,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             log.info("打印获取到的patientMapData:\n" + (k+v));
         });
         // 封装传给医院的数据
-        HashMap<String, Object> resultMap = new HashMap<>();
-        resultMap.put("hoscode",scheduleOrderVo.getHoscode());
-        resultMap.put("depcode",scheduleOrderVo.getDepcode());
-        resultMap.put("hosScheduleId",scheduleOrderVo.getHosScheduleId());
-        resultMap.put("reserveDate",scheduleOrderVo.getReserveDate());
-        resultMap.put("reserveTime",scheduleOrderVo.getReserveTime());
-        resultMap.put("amount",scheduleOrderVo.getAmount());
+        HashMap<String, Object> resultMap = new HashMap<String, Object>(){{
+            put("hoscode",scheduleOrderVo.getHoscode());
+            put("depcode",scheduleOrderVo.getDepcode());
+            put("hosScheduleId",scheduleOrderVo.getHosScheduleId());
+            put("reserveDate",scheduleOrderVo.getReserveDate());
+            put("reserveTime",scheduleOrderVo.getReserveTime());
+            put("amount",scheduleOrderVo.getAmount());
+        }};
         // 调用医院本部系统 进行数据出来 预约数更新
         JSONObject result = HttpRequestHelper.sendRequest(resultMap, "http://localhost:9998/order/submitOrder");
         if (result.getInteger("code") == 200){
@@ -107,15 +115,33 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             // 把orderInfo数据存入本地yygh_order表
             log.info("打印存入order数据库的" + orderInfo);
             baseMapper.insert(orderInfo);
-            // TODO 更新排班数量
             // 可预约数
             Integer reservedNumber = jsonObject.getInteger("reservedNumber");
-            //排班剩余预约数
+            // 排班剩余预约数
             Integer availableNumber = jsonObject.getInteger("availableNumber");
-            // TODO 给就诊人发短信 RabbitMQ
+
+            /**
+             *  Send to RabbitMQ
+             */
+            // 封装可预约数、剩余可预约数
+            OrderMqVo orderMqVo = OrderMqVo.builder().scheduleId(scheduleId)
+                    .reservedNumber(reservedNumber).availableNumber(availableNumber).build();
+            // 封装短信信息
+            Map<String, Object> noteMap = new HashMap<String, Object>(){{
+                computeIfAbsent("title",k->(orderInfo.getHosname()+"|"+orderInfo.getDepname()+"|"+orderInfo.getTitle()));
+                computeIfAbsent("amount",k->orderInfo.getAmount());
+                computeIfAbsent("reserveDate", k->orderInfo.getReserveDate());
+                computeIfAbsent("name",k->orderInfo.getPatientName());
+                computeIfAbsent("quitTime",k->new DateTime(orderInfo.getQuitTime()).toString("yyyy-MM-dd HH:mm"));
+            }};
+            MsmVo msmVo = MsmVo.builder().param(noteMap).phone(orderInfo.getPatientPhone()).build();
+            orderMqVo.setMsmVo(msmVo);
+            // 发送mq消息
+            rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_ORDER,MqConst.QUEUE_ORDER,orderMqVo);
             return orderInfo.getId();
         }else {
-            throw new YyghException(ResultCodeEnum.DATA_ERROR.getCode(),"处理订单的时候医院响应状态异常");
+            log.info("下单失败了~");
+            throw new YyghException(ResultCodeEnum.DATA_ERROR.getCode(),"处理订单的时候医院响应状态异常~");
         }
     }
 }

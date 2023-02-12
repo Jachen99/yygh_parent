@@ -112,8 +112,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 // 退号时间 = 排班日期+退号截止天数 + 具体退号时间
                 .quitTime(DateUtils.getDateTime(new DateTime(workDate).plusDays(quitDay).toDate(),quitTime).toDate())
                 // 预约截止时间 = 现在时间+预约周期 + 具体停号时间
-                .endTime(DateUtils.getDateTime(new DateTime().plusDays(bookingRule.getCycle()).toDate(), bookingRule.getStopTime()).toDate())
-                .build();
+                .endTime(DateUtils.getDateTime(new DateTime().plusDays(bookingRule.getCycle()).toDate()
+                        , bookingRule.getStopTime()).toDate()).build();
     }
 
     /**
@@ -419,8 +419,8 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public void saveSchedule(Schedule schedule) {
-        Schedule hasSchedule = scheduleRepository.findByHoscodeAndHosScheduleId(
-                schedule.getHoscode(), schedule.getHosScheduleId());
+        Schedule hasSchedule = scheduleRepository
+                .findByHoscodeAndHosScheduleId(schedule.getHoscode(), schedule.getHosScheduleId());
         if (hasSchedule==null){
             scheduleRepository.insert(schedule);
         }else {

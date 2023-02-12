@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
-
     @Resource
     private DepartmentRepository repository;
 
     /**
      * 根据医院编号获取分页的科室信息
+     *
      * @param page  第几页
      * @param limit 每页多少条
      * @param hoscode  医院编号
@@ -36,14 +36,13 @@ public class DepartmentServiceImpl implements DepartmentService {
      */
     @Override
     public Page<Department> findPage(Integer page, Integer limit,String hoscode) {
-        //按照depcode升序排序
+        // 按照depcode升序排序
         Sort sort = Sort.by(Sort.Direction.ASC, "depcode");
-
         Department department = Department.builder().hoscode(hoscode).build();
         Example<Department> example = Example.of(department);
-        //分页
+        // 分页
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
-        //查询所有
+        // 查询所有
         Page<Department> departments = repository.findAll(example,pageRequest);
         departments.forEach(System.out::println);
         return departments;
@@ -51,6 +50,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * 根据hoscode查询医院科室的方法
+     *
      * @param hoscode 医院编码
      * @return 医院科室集合list
      */
@@ -97,14 +97,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * 根据医院编号和科室编号删除科室
+     *
      * @param hoscode  医院编号
      * @param depcode  科室编号
      * @return 返回删除状态
      */
     @Override
     public String remove(String hoscode,String depcode) {
-        Department hasDepartment = repository
-                .findByHoscodeAndDepcode(hoscode, depcode);
+        Department hasDepartment = repository.findByHoscodeAndDepcode(hoscode, depcode);
         if (hasDepartment!=null){
             repository.deleteById(hasDepartment.getId());
             return "删除成功";
@@ -114,23 +114,20 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * 上传科室信息的方法
+     * 上传科室信息接口的实现方法
+     *
      * @param department  传入的科室对象
      */
     @Override
     public void saveById(Department department) {
-
-        Department hasDepartment = repository
-                .findByHoscodeAndDepcode(department.getHoscode(), department.getDepcode());
+        Department hasDepartment = repository.findByHoscodeAndDepcode(department.getHoscode(), department.getDepcode());
         if (hasDepartment==null){
             repository.insert(department);
         }else {
-            // 如果存在该家医院  重置id进行更新操作
+            // 如果存在该家医院 重置id进行更新操作
             department.setId(hasDepartment.getId());
             department.setCreateTime(hasDepartment.getCreateTime());
             repository.save(department);
         }
     }
-
-
 }

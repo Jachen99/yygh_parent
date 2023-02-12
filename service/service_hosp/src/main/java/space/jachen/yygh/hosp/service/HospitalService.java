@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 医院管理API接口
+ *
  * @author JaChen
  * @date 2023/2/2 10:37
  */
@@ -15,8 +17,9 @@ public interface HospitalService {
 
     /**
      * 查询医院信息的方法
-     * @param hoscode
-     * @return
+     *
+     * @param hoscode  医院编号
+     * @return  返回医院信息
      */
     Hospital getHospitalByHoscode(String hoscode);
 
@@ -53,6 +56,7 @@ public interface HospitalService {
 
     /**
      * 新增医院
+     *
      * @param hospital 医院对象
      */
     void saveById(Hospital hospital);

@@ -1,5 +1,7 @@
+############################################### 服务端口 ################################################################
 server:
   port: 8222
+############################################### spring #################################################################
 spring:
   application:
     name: service-gateway
@@ -9,10 +11,10 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: service-hosp  #设置路由id
-          uri: lb://service-hosp   #设置路由的uri
+        - id: service-hosp  # 设置路由id
+          uri: lb://service-hosp   # 设置路由的uri
           predicates:   #设置路由断言
-            - Path=/*/hosp/** # 路径匹配
+            - Path=/*/hosp/**  # 路径匹配
         - id: service-cmn
           uri: lb://service-cmn
           predicates:

@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * ${end}
+ * gateway网关主启动器
  *
  * @author JaChen
- * @date ${DATE} ${TIME}
+ * @date 2023-02-02
  */
 @SpringBootApplication
 public class ApiGatewayApplication {

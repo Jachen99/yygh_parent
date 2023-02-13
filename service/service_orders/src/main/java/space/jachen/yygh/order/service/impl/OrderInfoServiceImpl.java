@@ -49,6 +49,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Autowired
     private RabbitService rabbitService;
 
+    /**
+     * 获取订单详情
+     *
+     * @param orderId 订单id
+     * @return OrderInfo
+     */
     @Override
     public OrderInfo getOrderDetailById(Long orderId) {
         return baseMapper.selectById(orderId);
@@ -154,7 +160,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             orderInfo.setHosRecordId(hosRecordId);
             // 序号
             orderInfo.setNumber(number);
-            // 取号时间
+            // 取号时间 格式化
             orderInfo.setFetchTime(fetchTime);
             orderInfo.setFetchAddress(fetchAddress);
             // 把orderInfo数据存入本地yygh_order表

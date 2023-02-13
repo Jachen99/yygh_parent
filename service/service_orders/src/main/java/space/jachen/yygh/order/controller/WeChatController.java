@@ -31,4 +31,6 @@ public class WeChatController {
         Map<String,Object> map = weChatService.createNative(orderId);
         return JsonData.ok(map);
     }
+
+
 }

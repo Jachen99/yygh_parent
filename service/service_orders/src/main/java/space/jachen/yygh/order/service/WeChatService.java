@@ -9,6 +9,15 @@ import java.util.Map;
 public interface WeChatService {
 
     /**
+     * 根据订单号去微信第三方查询支付状态
+     * 因为我们暂时没有域名解析 所以只能通过订单号再去微信支付查询一次支付状态。
+     *
+     * @param orderId  订单号
+     * @return  Map<String,Object>
+     */
+    Map<String,String> queryPayStatus(Long orderId);
+
+    /**
      * 根据订单号下单，生成支付链接
      *
      * @param orderId 订单id

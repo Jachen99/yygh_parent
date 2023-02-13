@@ -31,11 +31,44 @@ import java.util.concurrent.TimeUnit;
 public class WeChatServiceImpl implements WeChatService {
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String,Object> redisTemplate;
     @Autowired
     private OrderInfoService orderInfoService;
     @Autowired
     private PaymentInfoService paymentInfoService;
+
+    /**
+     * 根据订单号去微信第三方查询支付状态
+     * 因为我们暂时没有域名解析 所以只能通过订单号再去微信支付查询一次支付状态。
+     *
+     * @param orderId  订单号
+     * @return  Map<String,Object>
+     */
+    @Override
+    public Map<String, String> queryPayStatus(Long orderId) {
+        try {
+            OrderInfo orderInfo = orderInfoService.getById(orderId);
+            // 封装参数
+            Map<String, String> paramMap = new HashMap<String, String>(){{
+                put("appid", ConstantPropertiesUtils.APPID);
+                put("mch_id", ConstantPropertiesUtils.PARTNER);
+                put("out_trade_no", orderInfo.getOutTradeNo());
+                put("nonce_str", WXPayUtil.generateNonceStr());
+            }};
+            // 设置请求
+            HttpClient client = new HttpClient("https://api.mch.weixin.qq.com/pay/orderquery");
+            client.setXmlParam(WXPayUtil.generateSignedXml(paramMap, ConstantPropertiesUtils.PARTNERKEY));
+            client.setHttps(true);
+            client.post();
+            // 返回第三方的数据，转成Map
+            String xml = client.getContent();
+            Map<String, String> resultMap = WXPayUtil.xmlToMap(xml);
+            log.info("再次查询支付状态微信返回的信息："+resultMap);
+            return resultMap;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * 根据订单号下单，生成支付链接
@@ -47,9 +80,10 @@ public class WeChatServiceImpl implements WeChatService {
     public Map<String, Object> createNative(Long orderId) {
 
         // 检查redis中是否存在该订单 如果有 直接返回
-        Map<String, Object> redisOrderId = (Map<String, Object>) redisTemplate.opsForValue().get(orderId.toString());
-        if (redisOrderId != null)
-            return redisOrderId;
+        Object obj = redisTemplate.opsForValue().get(orderId.toString());
+        if (obj instanceof Map<?, ?>){
+            return (Map<String, Object>)obj;
+        }
         try {
             // 保存订单数据到payment_info表
             OrderInfo orderInfo = orderInfoService.getOrderDetailById(orderId);
@@ -73,7 +107,7 @@ public class WeChatServiceImpl implements WeChatService {
             // 发送支付请求
             // HTTPClient来根据URL访问第三方接口并且传递参数
             HttpClient client = new HttpClient("https://api.mch.weixin.qq.com/pay/unifiedorder");
-            //client设置参数
+            // client设置参数
             client.setXmlParam(WXPayUtil.generateSignedXml(paramMap, ConstantPropertiesUtils.PARTNERKEY));
             client.setHttps(true);
             client.post();

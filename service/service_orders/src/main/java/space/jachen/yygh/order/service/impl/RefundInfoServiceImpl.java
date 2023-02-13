@@ -30,6 +30,7 @@ public class RefundInfoServiceImpl extends ServiceImpl<RefundInfoMapper, RefundI
         RefundInfo info = new RefundInfo();
         BeanUtils.copyProperties(paymentInfo,info);
         info.setRefundStatus(paymentInfo.getPaymentStatus());
+        baseMapper.insert(info);
         return info;
     }
 }

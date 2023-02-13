@@ -1,5 +1,6 @@
 package space.jachen.yygh.order.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPayUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
@@ -9,9 +10,13 @@ import org.springframework.stereotype.Service;
 import space.jachen.yygh.common.handler.YyghException;
 import space.jachen.yygh.common.result.ResultCodeEnum;
 import space.jachen.yygh.enums.PaymentTypeEnum;
+import space.jachen.yygh.enums.RefundStatusEnum;
 import space.jachen.yygh.model.order.OrderInfo;
+import space.jachen.yygh.model.order.PaymentInfo;
+import space.jachen.yygh.model.order.RefundInfo;
 import space.jachen.yygh.order.service.OrderInfoService;
 import space.jachen.yygh.order.service.PaymentInfoService;
+import space.jachen.yygh.order.service.RefundInfoService;
 import space.jachen.yygh.order.service.WeChatService;
 import space.jachen.yygh.order.utils.ConstantPropertiesUtils;
 import space.jachen.yygh.order.utils.HttpClient;
@@ -36,6 +41,62 @@ public class WeChatServiceImpl implements WeChatService {
     private OrderInfoService orderInfoService;
     @Autowired
     private PaymentInfoService paymentInfoService;
+    @Autowired
+    private RefundInfoService refundInfoService;
+
+    /***
+     * 退款的接口
+     *
+     * @param outTradeNo 订单号
+     * @return  Boolean
+     */
+    @Override
+    public Boolean refund(String outTradeNo) {
+        try {
+            // 获取当前支付记录
+            PaymentInfo paymentInfo = paymentInfoService.getPaymentInfo(outTradeNo, PaymentTypeEnum.WEIXIN.getStatus());
+            // 检查付款表的支付状态是否为REFUND  如果为REFUND表示已退款 直接返回true
+            RefundInfo refundInfo = refundInfoService.saveRefundInfo(paymentInfo);
+            if (refundInfo.getRefundStatus().equals(RefundStatusEnum.REFUND.getStatus()))
+                return true;
+            // 进行退款流程
+            // 封装微信退款接口的数据
+            HashMap<String, String> paramMap = new HashMap<String, String>() {{
+                put("appid", ConstantPropertiesUtils.APPID);  // 公众账号ID
+                put("mch_id", ConstantPropertiesUtils.PARTNER);   // 商户编号
+                put("nonce_str", WXPayUtil.generateNonceStr());
+                put("transaction_id", paymentInfo.getTradeNo());  // 微信订单号
+                put("out_trade_no", paymentInfo.getOutTradeNo());  // 商户订单编号
+                put("out_refund_no", "tk" + paymentInfo.getOutTradeNo());  // 商户退款单号
+                // paramMap.put("total_fee",paymentInfoQuery.getTotalAmount().multiply(new BigDecimal("100")).longValue()+"");
+                put("total_fee", "1");
+                // paramMap.put("refund_fee",paymentInfoQuery.getTotalAmount().multiply(new BigDecimal("100")).longValue()+"");
+                put("refund_fee", "1");
+            }};
+            // 传输数据
+            String paramXml = WXPayUtil.generateSignedXml(paramMap,ConstantPropertiesUtils.PARTNERKEY);
+            HttpClient client = new HttpClient("https://api.mch.weixin.qq.com/secapi/pay/refund");
+            client.setXmlParam(paramXml);
+            client.setHttps(true);
+            client.setCert(true);
+            client.setCertPassword(ConstantPropertiesUtils.PARTNER);
+            client.post();
+            // 接收响应数据
+            String content = client.getContent();
+            Map<String, String> xmlToMap = WXPayUtil.xmlToMap(content);
+            if ("SUCCESS".equals(xmlToMap.get("result_code"))){
+                refundInfo.setCallbackTime(new Date());
+                refundInfo.setTradeNo(xmlToMap.get("refund_id"));
+                refundInfo.setRefundStatus(RefundStatusEnum.REFUND.getStatus());
+                refundInfo.setCallbackContent(JSONObject.toJSONString(xmlToMap));
+                refundInfoService.updateById(refundInfo);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            throw new YyghException(444,"退款接口发送异常~");
+        }
+    }
 
     /**
      * 根据订单号去微信第三方查询支付状态

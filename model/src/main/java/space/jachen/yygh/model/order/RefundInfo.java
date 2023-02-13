@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 import space.jachen.yygh.model.base.BaseEntity;
 
 import java.math.BigDecimal;
@@ -20,9 +22,13 @@ import java.util.Date;
 @Data
 @ApiModel(description = "RefundInfo")
 @TableName("refund_info")
+@Builder
 public class RefundInfo extends BaseEntity {
 	
 	private static final long serialVersionUID = 1L;
+
+	@Tolerate
+	public RefundInfo(){}
 	
 	@ApiModelProperty(value = "对外业务编号")
 	@TableField("out_trade_no")

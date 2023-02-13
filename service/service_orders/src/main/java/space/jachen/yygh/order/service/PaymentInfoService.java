@@ -13,6 +13,15 @@ import java.util.Map;
 public interface PaymentInfoService extends IService<PaymentInfo> {
 
     /**
+     * 获取支付记录
+     *
+     * @param outTradeNo 交易号
+     * @param paymentType  支付类型 微信 支付宝
+     * @return  PaymentInfo
+     */
+    PaymentInfo getPaymentInfo(String outTradeNo, Integer paymentType);
+
+    /**
      * 更新支付状态
      *
      * @param outTradeNo 交易号

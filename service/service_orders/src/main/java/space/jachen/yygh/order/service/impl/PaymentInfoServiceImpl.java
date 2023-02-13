@@ -32,6 +32,23 @@ public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, Payme
     private OrderInfoService orderInfoService;
 
     /**
+     * 获取支付记录
+     *
+     * @param outTradeNo 交易号
+     * @param paymentType  支付类型 微信 支付宝
+     * @return  PaymentInfo
+     */
+    @Override
+    public PaymentInfo getPaymentInfo(String outTradeNo, Integer paymentType) {
+        return baseMapper.selectOne(
+                new LambdaQueryWrapper<PaymentInfo>(){{
+                    eq(PaymentInfo::getOutTradeNo,outTradeNo);
+                    eq(PaymentInfo::getPaymentType,paymentType);
+                }}
+        );
+    }
+
+    /**
      * 更新支付状态
      *
      * @param outTradeNo 交易号

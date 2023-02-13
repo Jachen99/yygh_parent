@@ -3,6 +3,9 @@ server:
   port: 8160
 ############################################### spring #################################################################
 spring:
+  devtools:
+    livereload:
+      enabled: false  # remove Unable to start LiveReload server
   application:
     name: service-user
   profiles:

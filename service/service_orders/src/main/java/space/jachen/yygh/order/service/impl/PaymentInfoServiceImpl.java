@@ -4,13 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import space.jachen.yygh.enums.OrderStatusEnum;
+import space.jachen.yygh.enums.PaymentStatusEnum;
 import space.jachen.yygh.model.order.OrderInfo;
 import space.jachen.yygh.model.order.PaymentInfo;
 import space.jachen.yygh.order.mapper.PaymentInfoMapper;
+import space.jachen.yygh.order.service.OrderInfoService;
 import space.jachen.yygh.order.service.PaymentInfoService;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 微信支付服务接口 实现类
@@ -22,6 +27,41 @@ import java.util.Date;
 @Service
 @Slf4j
 public class PaymentInfoServiceImpl extends ServiceImpl<PaymentInfoMapper, PaymentInfo> implements PaymentInfoService {
+
+    @Autowired
+    private OrderInfoService orderInfoService;
+
+    /**
+     * 更新支付状态
+     *
+     * @param outTradeNo 交易号
+     * @param paymentType 支付类型 微信 支付宝
+     * @param paramMap 调用微信查询支付状态接口返回map集合
+     */
+    @Override
+    public void paySuccess(String outTradeNo, Integer paymentType, Map<String, String> paramMap) {
+        // 更新订单状态
+        OrderInfo orderInfo = orderInfoService.getOne(
+                new LambdaQueryWrapper<OrderInfo>() {{
+                    eq(OrderInfo::getOutTradeNo, outTradeNo);
+                }}
+        );
+        orderInfo.setOrderStatus(OrderStatusEnum.PAID.getStatus());
+        log.info("支付成功后更新订单状态的数据："+orderInfo);
+        orderInfoService.updateById(orderInfo);
+        // 更新支付记录状态
+        PaymentInfo paymentInfo = baseMapper.selectOne(
+                new LambdaQueryWrapper<PaymentInfo>() {{
+                    eq(PaymentInfo::getOutTradeNo, outTradeNo);
+                }}
+        );
+        paymentInfo.setPaymentStatus(PaymentStatusEnum.PAID.getStatus());
+        paymentInfo.setTradeNo(paramMap.get("transaction_id"));
+        paymentInfo.setCallbackTime(new Date());
+        paymentInfo.setCallbackContent(paramMap.toString());
+        log.info("支付成功后更新支付记录的数据："+paymentInfo);
+        baseMapper.updateById(paymentInfo);
+    }
 
     /**
      * 保存交易记录.

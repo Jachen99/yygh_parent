@@ -5,13 +5,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.yygh.common.result.JsonData;
+import space.jachen.yygh.common.utils.JwtHelper;
 import space.jachen.yygh.enums.OrderStatusEnum;
 import space.jachen.yygh.model.order.OrderInfo;
 import space.jachen.yygh.order.service.OrderInfoService;
 import space.jachen.yygh.vo.order.OrderQueryVo;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +53,14 @@ public class OrderInfoController {
 
     @ApiOperation(value = "分页查询所有订单")
     @GetMapping("/auth/{page}/{limit}")
-    public JsonData<Map<String, Page<OrderInfo>>> getPageList(@PathVariable Long page, @PathVariable Long limit, OrderQueryVo orderQueryVo){
+    public JsonData<Map<String, Page<OrderInfo>>> getPageList(@PathVariable Long page, @PathVariable Long limit,
+            OrderQueryVo orderQueryVo, HttpServletRequest request){
+
+        String token = request.getHeader("token");
+        if (!StringUtils.isEmpty(token)){
+            Long userId = JwtHelper.getUserId(token);
+            orderQueryVo.setUserId(userId);
+        }
         Page<OrderInfo> orderInfoPage = new Page<>(page, limit);
         Page<OrderInfo> orderPageList = orderInfoService.getPageList(orderInfoPage,orderQueryVo);
         Map<String, Page<OrderInfo>> pageModel = new HashMap<String, Page<OrderInfo>>() {{

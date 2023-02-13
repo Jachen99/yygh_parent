@@ -73,7 +73,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     public Page<OrderInfo> getPageList(Page<OrderInfo> orderInfoPage, OrderQueryVo orderQueryVo) {
 
         LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<>();
-        // 添加查询条件 就诊人id和订单状态
+        // 添加查询条件 用户id、就诊人id和订单状态
+        wrapper = StringUtils.isEmpty(orderQueryVo.getUserId()) ?
+                wrapper : wrapper.eq(OrderInfo::getUserId,orderQueryVo.getUserId());
         wrapper = StringUtils.isEmpty(orderQueryVo.getPatientId()) ?
                 wrapper : wrapper.eq(OrderInfo::getPatientId,orderQueryVo.getPatientId());
         wrapper = StringUtils.isEmpty(orderQueryVo.getOrderStatus()) ?

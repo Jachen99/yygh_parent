@@ -1,13 +1,16 @@
 package space.jachen.yygh.order.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.yygh.common.result.JsonData;
 import space.jachen.yygh.enums.OrderStatusEnum;
+import space.jachen.yygh.model.order.OrderInfo;
 import space.jachen.yygh.order.service.OrderInfoService;
+import space.jachen.yygh.vo.order.OrderQueryVo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,11 +48,25 @@ public class OrderInfoController {
         return JsonData.ok(resultMap);
     }
 
-//    @ApiOperation(value = "分页查询所有订单")
-//    @GetMapping("/auth/{page}/{limit}")
-//    public JsonData getPageList(@PathVariable Long page, @PathVariable Long limit, OrderQueryVo){
-//        Page<OrderInfo> orderInfoPage = new Page<>(page, limit);
-//        Page<OrderInfo> orderPageList = orderInfoService.getPageList(orderInfoPage,OrderQueryVo);
-//    }
+    @ApiOperation(value = "分页查询所有订单")
+    @GetMapping("/auth/{page}/{limit}")
+    public JsonData<Map<String, Page<OrderInfo>>> getPageList(@PathVariable Long page, @PathVariable Long limit, OrderQueryVo orderQueryVo){
+        Page<OrderInfo> orderInfoPage = new Page<>(page, limit);
+        Page<OrderInfo> orderPageList = orderInfoService.getPageList(orderInfoPage,orderQueryVo);
+        Map<String, Page<OrderInfo>> pageModel = new HashMap<String, Page<OrderInfo>>() {{
+            put("pageModel", orderPageList);
+        }};
+        return JsonData.ok(pageModel);
+    }
+
+    @ApiOperation(value = "订单详情页")
+    @GetMapping("/auth/getOrders/{orderId}")
+    public JsonData<Map<String, OrderInfo>> getOrders(@PathVariable Long orderId){
+        OrderInfo orderInfo = orderInfoService.getOrderDetailById(orderId);
+        Map<String, OrderInfo> resultMap = new HashMap<String, OrderInfo>(){{
+            put("orderInfo",orderInfo);
+        }};
+        return JsonData.ok(resultMap);
+    }
 }
 

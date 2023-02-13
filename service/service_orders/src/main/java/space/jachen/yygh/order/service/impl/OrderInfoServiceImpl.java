@@ -1,12 +1,15 @@
 package space.jachen.yygh.order.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import space.jachen.yygh.common.handler.YyghException;
 import space.jachen.yygh.common.result.JsonData;
 import space.jachen.yygh.common.result.ResultCodeEnum;
@@ -23,8 +26,10 @@ import space.jachen.yygh.user.PatientFeignClient;
 import space.jachen.yygh.vo.hosp.ScheduleOrderVo;
 import space.jachen.yygh.vo.msm.MsmVo;
 import space.jachen.yygh.vo.order.OrderMqVo;
+import space.jachen.yygh.vo.order.OrderQueryVo;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -43,6 +48,46 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private HospFeignClient hospFeignClient;
     @Autowired
     private RabbitService rabbitService;
+
+    @Override
+    public OrderInfo getOrderDetailById(Long orderId) {
+        return baseMapper.selectById(orderId);
+    }
+
+    /**
+     * 获取分页后的订单数据
+     * wrapper条件为 ：
+     * 就诊人id patientId 和 订单状态orderStatus 进行查询即可
+     *
+     * @param orderInfoPage  Page订单对象
+     * @param orderQueryVo  OrderQueryVo
+     * @return Page<OrderInfo>
+     */
+    @Override
+    public Page<OrderInfo> getPageList(Page<OrderInfo> orderInfoPage, OrderQueryVo orderQueryVo) {
+
+        LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<>();
+        // 添加查询条件 就诊人id和订单状态
+        wrapper = StringUtils.isEmpty(orderQueryVo.getPatientId()) ?
+                wrapper : wrapper.eq(OrderInfo::getPatientId,orderQueryVo.getPatientId());
+        wrapper = StringUtils.isEmpty(orderQueryVo.getOrderStatus()) ?
+                wrapper : wrapper.eq(OrderInfo::getOrderStatus,orderQueryVo.getOrderStatus());
+        Page<OrderInfo> page = baseMapper.selectPage(orderInfoPage, wrapper);
+        List<OrderInfo> records = page.getRecords();
+        records.forEach(this::packageOrderStatus);
+        return page;
+    }
+
+    /**
+     * 封装返回order状态的方法
+     *
+     * @param item orderInfo
+     */
+    private void packageOrderStatus(OrderInfo item) {
+        Integer orderStatus = item.getOrderStatus();
+        // 更新订单状态
+        item.getParam().put("orderStatusString",OrderStatusEnum.getStatusNameByStatus(orderStatus));
+    }
 
     /**
      * 生成订单信息

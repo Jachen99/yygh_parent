@@ -20,7 +20,6 @@ import space.jachen.yygh.model.order.OrderInfo;
 import space.jachen.yygh.model.user.Patient;
 import space.jachen.yygh.order.mapper.OrderInfoMapper;
 import space.jachen.yygh.order.service.OrderInfoService;
-import space.jachen.yygh.order.service.RefundInfoService;
 import space.jachen.yygh.order.service.WeChatService;
 import space.jachen.yygh.rabbitmq.config.MqConst;
 import space.jachen.yygh.rabbitmq.service.RabbitService;
@@ -49,8 +48,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private RabbitService rabbitService;
     @Autowired
     private WeChatService weChatService;
-    @Autowired
-    private RefundInfoService refundInfoService;
 
     @Override
     public Boolean cancelOrder(Long orderId) {

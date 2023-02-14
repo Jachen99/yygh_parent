@@ -51,3 +51,19 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:space/jachen/yygh/cmn/mapper/*/*.xml
+############################################## xxl-job任务调度配置 #######################################################
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:8080/xxl-job-admin  #调度中心部署地址,多个配置逗号分隔 "http://address01,http://address02"
+    accessToken: jiguanchen.space  #执行器token，非空时启用 xxl-job, access token
+    executor:
+      appname: yygh-order  # 执行器app名称,和控制台那边配置一样的名称，不然注册不上去
+      port: 6666  # 执行器的端口
+      logpath: ./data/logs/xxl-job/executor  # 执行器日志文件存储路径，需要对该路径拥有读写权限；为空则使用默认路径
+      logretentiondays: 30  # 执行器日志保存天数
+      # [选填]执行器IP ：默认为空表示自动获取IP（即springboot容器的ip和端口，可以自动获取，也可以指定），
+      # 多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"，
+      ip:
+      # [选填]执行器注册：优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址。从而更灵活的支持容器类型执行器动态IP和动态映射端口问题
+      address:

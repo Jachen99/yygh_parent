@@ -31,6 +31,16 @@ public class OrderInfoController {
     @Autowired
     private OrderInfoService orderInfoService;
 
+    @ApiOperation(value = "取消预约")
+    @GetMapping("/auth/cancelOrder/{orderId}")
+    public JsonData<Object> cancelOrder(@PathVariable Long orderId){
+        Boolean result = orderInfoService.cancelOrder(orderId);
+        if (result){
+            return JsonData.ok();
+        }
+        return JsonData.fail();
+    }
+
     @ApiOperation(value = "创建订单")
     @PostMapping("/auth/submitOrder/{scheduleId}/{patientId}")
     public JsonData<Map<String, Long>> submitOrder(

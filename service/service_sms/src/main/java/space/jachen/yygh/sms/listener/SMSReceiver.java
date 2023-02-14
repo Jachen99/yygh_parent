@@ -40,6 +40,7 @@ public class SMSReceiver {
             key = {MqConst.ROUTING_MSM_ITEM}
     ))
     public void send(MsmVo msmVo, Message message, Channel channel) {
+        System.out.println("向就诊人" + msmVo.getPhone() + "发送了一条消息");
         smsService.send(msmVo);
     }
 }

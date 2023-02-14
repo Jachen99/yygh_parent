@@ -18,6 +18,11 @@ import space.jachen.yygh.order.service.RefundInfoService;
 @Service
 public class RefundInfoServiceImpl extends ServiceImpl<RefundInfoMapper, RefundInfo> implements RefundInfoService{
 
+    /**
+     * 保存退款记录
+     *
+     * @param paymentInfo  支付记录
+     */
     @Override
     public RefundInfo saveRefundInfo(PaymentInfo paymentInfo) {
         RefundInfo refundInfo = baseMapper.selectOne(

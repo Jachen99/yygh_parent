@@ -40,4 +40,11 @@ public interface OrderInfoService extends IService<OrderInfo> {
      * @return OrderInfo
      */
     OrderInfo getOrderDetailById(Long orderId);
+
+    /**
+     *
+     * @param orderId
+     * @return
+     */
+    Boolean cancelOrder(Long orderId);
 }

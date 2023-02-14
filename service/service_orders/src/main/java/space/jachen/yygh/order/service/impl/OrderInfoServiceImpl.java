@@ -28,10 +28,7 @@ import space.jachen.yygh.vo.msm.MsmVo;
 import space.jachen.yygh.vo.order.OrderMqVo;
 import space.jachen.yygh.vo.order.OrderQueryVo;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 订单表 服务实现类
@@ -48,6 +45,52 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private HospFeignClient hospFeignClient;
     @Autowired
     private RabbitService rabbitService;
+
+    @Override
+    public Boolean cancelOrder(Long orderId) {
+        OrderInfo orderInfo = baseMapper.selectById(orderId);
+        // 截止日期
+        Date quitTime = orderInfo.getQuitTime();
+        DateTime dateTime = new DateTime(quitTime);
+        if (dateTime.isBeforeNow()){
+            throw new YyghException(ResultCodeEnum.FAIL.getCode(),"已经超过取消预约的截止日期，取消预约失败~");
+        }
+        // 查询是否已经支付
+        if (orderInfo.getOrderStatus() == 1){
+            // 申请微信退款
+
+
+            // 向退款表插入数据
+        }
+        // 医院唯一表示
+        String hosRecordId = orderInfo.getHosRecordId();
+        // 排班id
+        String scheduleId = orderInfo.getScheduleId();
+        // 封装传给医院的信息
+        Map<String, Object> map = new HashMap<String, Object>() {{
+            put("hosRecordId", hosRecordId);
+        }};
+        JSONObject jsonObject = HttpRequestHelper.sendRequest(map, "http://localhost:9998/order/updateCancelStatus");
+        // 获取医院响应回来的信息
+        if (jsonObject.getInteger("code")!=200){
+            throw new YyghException(ResultCodeEnum.FAIL.getCode(),"医院模拟系统服务响应异常，取消预约失败~");
+        }
+        JSONObject data = jsonObject.getJSONObject("data");
+        Integer reservedNumber = data.getInteger("reservedNumber");
+        Integer availableNumber = data.getInteger("availableNumber");
+        // 更新订单状态为已取消
+        orderInfo.setOrderStatus(OrderStatusEnum.CANCLE.getStatus());
+        baseMapper.updateById(orderInfo);
+        // 向rabbitMQ发消息 更新预约数和可预约数
+        MsmVo msmVo = MsmVo.builder().phone(orderInfo.getPatientPhone()).build();
+        OrderMqVo orderMqVo = OrderMqVo.builder()
+                .scheduleId(scheduleId)
+                .reservedNumber(reservedNumber)
+                .availableNumber(availableNumber)
+                .msmVo(msmVo).build();
+        rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_ORDER,MqConst.ROUTING_ORDER,orderMqVo);
+        return true;
+    }
 
     /**
      * 获取订单详情
@@ -172,7 +215,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             Integer reservedNumber = jsonObject.getInteger("reservedNumber");
             // 排班剩余预约数
             Integer availableNumber = jsonObject.getInteger("availableNumber");
-
             /**
              *  Send to RabbitMQ
              */

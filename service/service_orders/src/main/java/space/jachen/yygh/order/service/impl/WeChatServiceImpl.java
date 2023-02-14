@@ -84,11 +84,13 @@ public class WeChatServiceImpl implements WeChatService {
             // 接收响应数据
             String content = client.getContent();
             Map<String, String> xmlToMap = WXPayUtil.xmlToMap(content);
+            log.info("打印取消预约退款后微信返回的xml数据{}",xmlToMap);
             if ("SUCCESS".equals(xmlToMap.get("result_code"))){
                 refundInfo.setCallbackTime(new Date());
                 refundInfo.setTradeNo(xmlToMap.get("refund_id"));
                 refundInfo.setRefundStatus(RefundStatusEnum.REFUND.getStatus());
                 refundInfo.setCallbackContent(JSONObject.toJSONString(xmlToMap));
+                log.info("退款成功后refundInfo表插入的数据{}",refundInfo);
                 refundInfoService.updateById(refundInfo);
                 return true;
             }

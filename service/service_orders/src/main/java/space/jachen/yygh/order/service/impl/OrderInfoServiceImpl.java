@@ -20,6 +20,8 @@ import space.jachen.yygh.model.order.OrderInfo;
 import space.jachen.yygh.model.user.Patient;
 import space.jachen.yygh.order.mapper.OrderInfoMapper;
 import space.jachen.yygh.order.service.OrderInfoService;
+import space.jachen.yygh.order.service.RefundInfoService;
+import space.jachen.yygh.order.service.WeChatService;
 import space.jachen.yygh.rabbitmq.config.MqConst;
 import space.jachen.yygh.rabbitmq.service.RabbitService;
 import space.jachen.yygh.user.PatientFeignClient;
@@ -45,6 +47,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private HospFeignClient hospFeignClient;
     @Autowired
     private RabbitService rabbitService;
+    @Autowired
+    private WeChatService weChatService;
+    @Autowired
+    private RefundInfoService refundInfoService;
 
     @Override
     public Boolean cancelOrder(Long orderId) {
@@ -56,12 +62,15 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             throw new YyghException(ResultCodeEnum.FAIL.getCode(),"已经超过取消预约的截止日期，取消预约失败~");
         }
         // 查询是否已经支付
-        if (orderInfo.getOrderStatus() == 1){
-            // 申请微信退款
-
-
-            // 向退款表插入数据
+        // 走已经付款的退款逻辑
+        if (orderInfo.getOrderStatus().equals(OrderStatusEnum.PAID.getStatus())){
+            log.info("进入已支付的退款逻辑......");
+            // 向退款表插入数据 并进行微信退款操作
+            Boolean refund = weChatService.refund(orderInfo.getOutTradeNo());
+            if (!refund)
+                throw new YyghException(444,"cancelOrder中调取微信退款接口时出现异常~");
         }
+        // 更新医院模拟系统数据
         // 医院唯一表示
         String hosRecordId = orderInfo.getHosRecordId();
         // 排班id
@@ -88,6 +97,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 .reservedNumber(reservedNumber)
                 .availableNumber(availableNumber)
                 .msmVo(msmVo).build();
+        log.info("打印取消预约时向hosp模块的队列发送的消息{}",orderMqVo);
         rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_ORDER,MqConst.ROUTING_ORDER,orderMqVo);
         return true;
     }

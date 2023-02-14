@@ -16,7 +16,7 @@ public class ConstantPropertiesUtils implements InitializingBean {
     @Value("${wx.pay.partner-key}")
     private String partnerkey;
 
-    @Value("wx.cert")
+    @Value("${wx.pay.cert}")
     private String cert;
 
     public static String APPID;

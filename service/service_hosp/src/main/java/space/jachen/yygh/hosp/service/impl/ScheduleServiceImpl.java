@@ -163,8 +163,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         // 分组：根据工作如wordDate进行分组的规则
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(criteria),
-                Aggregation.group("workDate")
-                        .first("workDate").as("workDate")
+                Aggregation.group("workDate").first("workDate").as("workDate")
                         // 统计同一天的医生数量
                         .count().as("docname")
                         // 科室可预约数
@@ -352,8 +351,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         // 分组：根据工作如wordDate进行分组的规则
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(criteria),
-                Aggregation.group("workDate")
-                        .first("workDate").as("workDate")
+                Aggregation.group("workDate").first("workDate").as("workDate")
                         // 统计同一天的医生数量
                         .count().as("docname")
                         // 科室可预约数

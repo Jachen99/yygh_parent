@@ -1,6 +1,6 @@
 # 医院预约挂号系统
 主要技术栈：<br>
-前端 ：Vue3.x+NUXT框架+Element-UI+EChars
+前端 ：Vue3.x+NUXT框架+Element-UI+EChars+NodeJS+NPM
 <br>
 后台 ：Springboot、SprngCloudAlibaba微服务组件、Mybatis-Plus
 <br>
@@ -10,9 +10,11 @@
 <br>
 分布式调度中心 : xxl-job
 <br>
+分布式文件存储 ：Alibaba OSS
+<br>
 注册中心 ：Nacos
 <br>
-API接口生成 ：swagger3.x
+API接口生成 ：swagger3.x、smart-doc+Trona
 <br><br>
 部分页面展示<br>
 xxl-job任务调度中心<br>

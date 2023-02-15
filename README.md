@@ -16,7 +16,6 @@ Vue3.x+NUXT框架+Element-UI
 <br>
 <br>
 登录页面：支持微信、手机号登录<br>
-<br>
 ![用户登录](https://user-images.githubusercontent.com/81365742/218897214-0cfa29d6-ec7b-4c35-8ea4-fdd69902c6d0.png)
 <br>
 <br>

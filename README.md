@@ -1,13 +1,17 @@
 # 医院预约挂号系统
 主要技术栈版本：<br>
 前端 <br>
-Vue3.x+NUXT框架+Element-UI<br>
+Vue3.x+NUXT框架+Element-UI
+<br>
+<br>
 部分页面展示<br>
 任务调度中心<br>
 ![任务调度](https://user-images.githubusercontent.com/81365742/218898854-ebf25961-2411-43fb-bfd1-d7336a1c338d.png)
 <br>
-用户端：<br>
-主页面<br>
+![调度日志](https://user-images.githubusercontent.com/81365742/218905817-095e80a1-f524-405e-b617-26df9bafd230.png)
+<br>
+<br>
+用户主页面<br>
 ![用户主页面](https://user-images.githubusercontent.com/81365742/218896184-97d4e6bc-b7d3-43b9-bdf0-0b5a178ffc1f.png)
 <br>
 登录页面：支持微信、手机号登录<br>
@@ -21,4 +25,6 @@ Vue3.x+NUXT框架+Element-UI<br>
 ![就诊人管理](https://user-images.githubusercontent.com/81365742/218897909-31046308-5539-4b6b-a342-e26708e0ab61.png)
 <br>
 ![挂号](https://user-images.githubusercontent.com/81365742/218898937-6cc30b61-6af4-4819-a626-1678effafe7e.png)
+<br>
+![微信支付](https://user-images.githubusercontent.com/81365742/218905572-7aeb5fef-e7ac-40e0-8706-bf9d3f8506a3.png)
 <br>

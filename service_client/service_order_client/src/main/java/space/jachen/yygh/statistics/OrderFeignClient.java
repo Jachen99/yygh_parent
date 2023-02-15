@@ -2,7 +2,8 @@ package space.jachen.yygh.statistics;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import space.jachen.yygh.vo.order.OrderCountQueryVo;
 
 import java.util.Map;
@@ -18,6 +19,6 @@ public interface OrderFeignClient {
     /**
      * 获取订单统计数据
      */
-    @GetMapping(baseURL+"auth/getCountMap")
-    Map<String, Object> getCountMap(OrderCountQueryVo orderCountQueryVo);
+    @PostMapping(baseURL+"/auth/getCountMap")
+    Map<String, Object> getCountMap(@RequestBody OrderCountQueryVo orderCountQueryVo);
 }

@@ -2,9 +2,11 @@
 主要技术栈版本：<br>
 前端 ：Vue3.x+NUXT框架+Element-UI+EChars
 <br>
-后台 ：Springboot+SprngCloudAlibaba微服务组件+Redis+Mybatis-Plus
+后台 ：Springboot、SprngCloudAlibaba微服务组件、Mybatis-Plus
 <br>
-数据库 ：MongoDB+MySQL8.0
+中间件 ：Redis、RabbitMQ
+<br>
+数据库 ：MongoDB、MySQL8.0
 <br>
 分布式调度中心 : xxl-job
 <br>

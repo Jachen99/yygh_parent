@@ -26,10 +26,13 @@ import space.jachen.yygh.rabbitmq.service.RabbitService;
 import space.jachen.yygh.user.PatientFeignClient;
 import space.jachen.yygh.vo.hosp.ScheduleOrderVo;
 import space.jachen.yygh.vo.msm.MsmVo;
+import space.jachen.yygh.vo.order.OrderCountQueryVo;
+import space.jachen.yygh.vo.order.OrderCountVo;
 import space.jachen.yygh.vo.order.OrderMqVo;
 import space.jachen.yygh.vo.order.OrderQueryVo;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 订单表 服务实现类
@@ -49,6 +52,30 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Autowired
     private WeChatService weChatService;
 
+    /**
+     * 订单统计
+     */
+    //实现方法
+    @Override
+    public Map<String, Object> getCountMap(OrderCountQueryVo orderCountQueryVo) {
+        Map<String, Object> map = new HashMap<>();
+        List<OrderCountVo> orderCountVoList
+                = baseMapper.selectOrderCount(orderCountQueryVo);
+        // 日期列表
+        List<String> dateList=orderCountVoList.stream().map(OrderCountVo::getReserveDate).collect(Collectors.toList());
+        // 统计列表
+        List<Integer> countList=orderCountVoList.stream().map(OrderCountVo::getCount).collect(Collectors.toList());
+        map.put("dateList", dateList);
+        map.put("countList", countList);
+        return map;
+    }
+
+    /**
+     * 取消预约的接口
+     *
+     * @param orderId  订单id
+     * @return  Boolean
+     */
     @Override
     public Boolean cancelOrder(Long orderId) {
         OrderInfo orderInfo = baseMapper.selectById(orderId);

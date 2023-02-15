@@ -3,7 +3,10 @@ package space.jachen.yygh.order.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.yygh.model.order.OrderInfo;
+import space.jachen.yygh.vo.order.OrderCountQueryVo;
 import space.jachen.yygh.vo.order.OrderQueryVo;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -42,9 +45,15 @@ public interface OrderInfoService extends IService<OrderInfo> {
     OrderInfo getOrderDetailById(Long orderId);
 
     /**
+     * 取消预约的接口
      *
-     * @param orderId
-     * @return
+     * @param orderId  订单id
+     * @return  Boolean
      */
     Boolean cancelOrder(Long orderId);
+
+    /**
+     * 订单统计
+     */
+    Map<String, Object> getCountMap(OrderCountQueryVo orderCountQueryVo);
 }

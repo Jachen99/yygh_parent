@@ -14,6 +14,7 @@
     <modules>
         <module>service_utils</module>
         <module>rabbit_util</module>
+        <module>spring-security</module>
     </modules>
 
     <properties>

@@ -6,6 +6,11 @@
 <br>
 数据库 ：MongoDB+MySQL8.0
 <br>
+分布式调度中心 : xxl-job
+<br>
+注册中心 ：Nacos
+<br>
+API接口生成 ：swagger3.x
 <br>
 部分页面展示<br>
 xxl-job任务调度中心<br>
@@ -14,6 +19,9 @@ xxl-job任务调度中心<br>
 ![调度日志](https://user-images.githubusercontent.com/81365742/218905817-095e80a1-f524-405e-b617-26df9bafd230.png)
 <br>
 <br>
+Nacos注册与配置中心<br>
+![注册中心](https://user-images.githubusercontent.com/81365742/218953959-c0b1eba7-98bc-4f92-a8e4-aa3a5ad247fa.png)
+<br><br>
 微服务医院后台系统<br>
 ![后台](https://user-images.githubusercontent.com/81365742/218951474-a68f4e20-e80d-4ffd-90fb-68182c59cb8a.png)
 <br>

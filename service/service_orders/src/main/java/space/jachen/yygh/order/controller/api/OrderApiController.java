@@ -3,7 +3,6 @@ package space.jachen.yygh.order.controller.api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import space.jachen.yygh.order.service.OrderInfoService;
@@ -23,7 +22,7 @@ public class OrderApiController {
 
     @ApiOperation(value = "获取订单统计数据")
     @GetMapping("auth/getCountMap")
-    public Map<String, Object> getCountMap(@RequestBody OrderCountQueryVo orderCountQueryVo) {
+    public Map<String, Object> getCountMap(OrderCountQueryVo orderCountQueryVo) {
         return orderService.getCountMap(orderCountQueryVo);
     }
 }

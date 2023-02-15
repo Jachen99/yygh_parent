@@ -1,7 +1,10 @@
 # 医院预约挂号系统
 主要技术栈版本：<br>
-前端 <br>
-Vue3.x+NUXT框架+Element-UI
+前端 ：Vue3.x+NUXT框架+Element-UI+EChars
+<br>
+后台 ：Springboot+SprngCloudAlibaba微服务组件+Redis+Mybatis-Plus
+<br>
+数据库 ：MongoDB+MySQL8.0
 <br>
 <br>
 部分页面展示<br>

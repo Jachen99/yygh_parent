@@ -1,17 +1,41 @@
-# 医院预约挂号系统
-主要技术栈版本：<br>
-前端 <br>
-Vue3.x+NUXT框架+Element-UI
+# 医院预约挂号平台
+主要技术栈：<br>
+前端 ：Vue3.x+NUXT框架+Element-UI+EChars+NodeJS+NPM
 <br>
+后台 ：Springboot、SprngCloudAlibaba微服务组件、Mybatis-Plus、阿里云短信
 <br>
+中间件 ：Redis、RabbitMQ
+<br>
+数据库 ：MongoDB、MySQL8.0
+<br>
+分布式调度中心 : xxl-job
+<br>
+分布式文件存储 ：阿里云OSS
+<br>
+注册中心 ：Nacos
+<br>
+API接口生成 ：swagger3.x、smart-doc+Trona
+<br><br>
 部分页面展示<br>
-任务调度中心<br>
+xxl-job任务调度中心<br>
 ![任务调度](https://user-images.githubusercontent.com/81365742/218898854-ebf25961-2411-43fb-bfd1-d7336a1c338d.png)
 <br>
 ![调度日志](https://user-images.githubusercontent.com/81365742/218905817-095e80a1-f524-405e-b617-26df9bafd230.png)
 <br>
 <br>
-用户主页面<br>
+Nacos注册与配置中心<br>
+![注册中心](https://user-images.githubusercontent.com/81365742/218953959-c0b1eba7-98bc-4f92-a8e4-aa3a5ad247fa.png)
+<br><br>
+微服务医院后台系统<br>
+![后台](https://user-images.githubusercontent.com/81365742/218951474-a68f4e20-e80d-4ffd-90fb-68182c59cb8a.png)
+<br>
+![后台1](https://user-images.githubusercontent.com/81365742/218951611-39600417-beef-425a-ba3c-94444eb36663.png)
+<br>
+![后台2](https://user-images.githubusercontent.com/81365742/218951842-60ac674c-d940-4475-8370-761da1cf9b6c.png)
+<br>
+![后台3](https://user-images.githubusercontent.com/81365742/218952549-0dfcac14-6b65-4871-839c-0b5c8225abc2.png)
+<br><br>
+用户系统主页面<br>
 ![用户主页面](https://user-images.githubusercontent.com/81365742/218896184-97d4e6bc-b7d3-43b9-bdf0-0b5a178ffc1f.png)
 <br>
 <br>

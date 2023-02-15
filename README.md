@@ -2,7 +2,7 @@
 主要技术栈：<br>
 前端 ：Vue3.x+NUXT框架+Element-UI+EChars+NodeJS+NPM
 <br>
-后台 ：Springboot、SprngCloudAlibaba微服务组件、Mybatis-Plus
+后台 ：Springboot、SprngCloudAlibaba微服务组件、Mybatis-Plus、阿里云短信
 <br>
 中间件 ：Redis、RabbitMQ
 <br>
@@ -10,7 +10,7 @@
 <br>
 分布式调度中心 : xxl-job
 <br>
-分布式文件存储 ：Alibaba OSS
+分布式文件存储 ：阿里云OSS
 <br>
 注册中心 ：Nacos
 <br>

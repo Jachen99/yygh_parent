@@ -1,4 +1,4 @@
-# 医院预约挂号系统
+# 医院预约挂号平台
 主要技术栈：<br>
 前端 ：Vue3.x+NUXT框架+Element-UI+EChars+NodeJS+NPM
 <br>

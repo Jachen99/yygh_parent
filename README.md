@@ -2,7 +2,7 @@
 主要技术栈：<br>
 前端 ：Vue3.x+NUXT框架+Element-UI+EChars+NodeJS+NPM
 <br>
-后台 ：Springboot、SprngCloudAlibaba微服务组件、Mybatis-Plus、阿里云短信
+后台 ：Springboot、SpringCloudAlibaba微服务组件、Mybatis-Plus、阿里云短信
 <br>
 中间件 ：Redis、RabbitMQ
 <br>

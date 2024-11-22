@@ -6,7 +6,7 @@
     <parent>
         <groupId>space.jachen</groupId>
         <artifactId>service</artifactId>
-        <version>1.0.1</version>
+        <version>feature-V20241130</version>
     </parent>
 
     <artifactId>service_orders</artifactId>
@@ -32,22 +32,22 @@
         <dependency>
             <groupId>space.jachen</groupId>
             <artifactId>rabbit_util</artifactId>
-            <version>1.0.1</version>
+            <version>feature-V20241130</version>
         </dependency>
         <dependency>
             <groupId>space.jachen</groupId>
             <artifactId>service_cmn_client</artifactId>
-            <version>1.0.1</version>
+            <version>feature-V20241130</version>
         </dependency>
         <dependency>
             <groupId>space.jachen</groupId>
             <artifactId>service_hosp_client</artifactId>
-            <version>1.0.1</version>
+            <version>feature-V20241130</version>
         </dependency>
         <dependency>
             <groupId>space.jachen</groupId>
             <artifactId>service_user_client</artifactId>
-            <version>1.0.1</version>
+            <version>feature-V20241130</version>
         </dependency>
     </dependencies>
 

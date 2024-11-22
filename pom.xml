@@ -6,7 +6,7 @@
 
     <groupId>space.jachen</groupId>
     <artifactId>yygh_parent</artifactId>
-    <version>1.0.1</version>
+    <version>feature-V20241130</version>
     <packaging>pom</packaging>
     <modules>
         <module>model</module>

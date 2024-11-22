@@ -6,7 +6,7 @@
     <parent>
         <groupId>space.jachen</groupId>
         <artifactId>service_client</artifactId>
-        <version>1.0.1</version>
+        <version>feature-V20241130</version>
     </parent>
 
     <artifactId>service_user_client</artifactId>

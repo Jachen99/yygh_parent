@@ -65,7 +65,7 @@ public class PatientController {
         Long userId = JwtHelper.getUserId(token);
         patient.setUserId(userId);
         patientService.save(patient);
-        return JsonData.ok().message("新增成功");
+        return JsonData.ok("新增成功");
     }
 
     @ApiOperation("修改就诊人信息")

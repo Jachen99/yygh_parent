@@ -2,20 +2,21 @@ package space.jachen.yygh.common.result;
 
 import lombok.Data;
 
+/**
+ * @author jachen
+ * 通用的 JSON 返回格式
+ */
 @Data
 public class JsonData<T> {
-    //返回码
-    private Integer code;
+    private Integer code; // 状态码
+    private String message; // 消息内容
+    private T data; // 数据内容
 
-    //返回消息
-    private String message;
+    // 构造私有化，避免直接实例化
+    private JsonData() {}
 
-    //返回数据
-    private T data;
 
-    public JsonData(){}
-
-    // 返回数据
+     // 返回数据
     protected static <T> JsonData<T> build(T data) {
         JsonData<T> jsonData = new JsonData<T>();
         if (data != null)
@@ -37,41 +38,60 @@ public class JsonData<T> {
         return jsonData;
     }
 
-    public static<T> JsonData<T> ok(){
-        return JsonData.ok(null);
+
+     /**
+     * 静态方法创建成功响应 kod=200 message=成功 data=null
+     */
+    public static <T> JsonData<T> ok() {
+        JsonData<T> jsonData = new JsonData<>();
+        jsonData.setCode(ResultCodeEnum.SUCCESS.getCode());
+        jsonData.setMessage(ResultCodeEnum.SUCCESS.getMessage());
+        jsonData.setData(null);
+        return jsonData;
+    }
+
+
+    /**
+     * 静态方法创建成功响应
+     */
+    public static <T> JsonData<T> ok(T data) {
+        JsonData<T> jsonData = new JsonData<>();
+        jsonData.setCode(ResultCodeEnum.SUCCESS.getCode());
+        jsonData.setMessage(ResultCodeEnum.SUCCESS.getMessage());
+        jsonData.setData(data);
+        return jsonData;
     }
 
     /**
-     * 操作成功
-     * @param data  baseCategory1List
-     * @param <T>
-     * @return
+     * 静态方法创建失败响应
      */
-    public static<T> JsonData<T> ok(T data){
-        return build(data, ResultCodeEnum.SUCCESS);
-    }
-
-    public static<T> JsonData<T> fail(){
-        return JsonData.fail(null);
+    public static <T> JsonData<T> fail(String message) {
+        JsonData<T> jsonData = new JsonData<>();
+        jsonData.setCode(ResultCodeEnum.FAIL.getCode());
+        jsonData.setMessage(message);
+        return jsonData;
     }
 
     /**
-     * 操作失败
-     * @param data
-     * @param <T>
-     * @return
+     * 自定义失败响应
      */
-    public static<T> JsonData<T> fail(T data){
-        return build(data, ResultCodeEnum.FAIL);
+    public static <T> JsonData<T> fail(T data) {
+        JsonData<T> jsonData = new JsonData<>();
+        jsonData.setCode(ResultCodeEnum.FAIL.getCode());
+        jsonData.setMessage(ResultCodeEnum.FAIL.getMessage());
+        jsonData.setData(data);
+        return jsonData;
     }
 
-    public JsonData<T> message(String msg){
-        this.setMessage(msg);
-        return this;
-    }
 
-    public JsonData<T> code(Integer code){
-        this.setCode(code);
-        return this;
+        /**
+     * 自定义失败响应
+     */
+    public static <T> JsonData<T> fail() {
+        JsonData<T> jsonData = new JsonData<>();
+        jsonData.setCode(ResultCodeEnum.FAIL.getCode());
+        jsonData.setMessage(ResultCodeEnum.FAIL.getMessage());
+        jsonData.setData(null);
+        return jsonData;
     }
 }

@@ -125,7 +125,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
             baseMapper.updateById(userInfo);
             log.info("存入数据库用户认证的数据："+userInfo);
         }else {
-            throw new YyghException(ResultCodeEnum.LOGIN_MOBLE_ERROR.getCode(),"用户信息异常，无法进行用户认证");
+            throw new YyghException(ResultCodeEnum.LOGIN_MOBILE_ERROR.getCode(),"用户信息异常，无法进行用户认证");
         }
     }
 

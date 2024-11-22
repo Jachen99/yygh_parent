@@ -36,6 +36,6 @@ public class FileUploadController {
         String uploadUrl = fileService.upload(file);
         Map<String, String> hashMap = new HashMap<>();
         hashMap.put("url",uploadUrl);
-        return JsonData.ok(hashMap).message("文件上传成功");
+        return JsonData.ok(hashMap);
     }
 }
